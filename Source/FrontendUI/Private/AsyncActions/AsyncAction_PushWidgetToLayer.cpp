@@ -2,7 +2,8 @@
 
 
 #include "AsyncActions/AsyncAction_PushWidgetToLayer.h"
-#include "GameplayTagContainer.h"
+#include "Widgets/Widget_ActivatableBase.h"
+#include "Subsystems/FrontendUISubsystem.h"
 
 UAsyncAction_PushWidgetToLayer* UAsyncAction_PushWidgetToLayer::PushWidgetToLayer(const UObject* WorldContextObject, APlayerController* PlayerController, TSoftClassPtr<UWidget_ActivatableBase> WidgetClass, FGameplayTag LayerTag, bool bFocusOnNewlyPushedWidget)
 {
@@ -13,11 +14,47 @@ UAsyncAction_PushWidgetToLayer* UAsyncAction_PushWidgetToLayer::PushWidgetToLaye
         if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
         {
             UAsyncAction_PushWidgetToLayer* Action = NewObject<UAsyncAction_PushWidgetToLayer>();
+            Action->World = World;
+            Action->WidgetClass = WidgetClass;
+            Action->PlayerController = PlayerController;
+            Action->LayerTag = LayerTag;
+            Action->bFocusOnNewlyPushedWidget = bFocusOnNewlyPushedWidget;
             Action->RegisterWithGameInstance(World);
-            
+
             return Action;
         }
     }
 
     return nullptr;
+}
+
+void UAsyncAction_PushWidgetToLayer::Activate()
+{
+    if (UFrontendUISubsystem* FrontendUISubsystem = UFrontendUISubsystem::Get(World.Get()))
+    {
+        FrontendUISubsystem->PushSoftWidgetToLayerStackAsync(LayerTag, WidgetClass,
+            [this](EAsyncPushWidgetState PushState, UWidget_ActivatableBase* PushedWidget)
+            {
+                switch (PushState)
+                {
+                    case EAsyncPushWidgetState::BeforePush:
+                        PushedWidget->SetOwningPlayer(PlayerController.Get());
+                        BeforePush.Broadcast(PushedWidget);
+                        break;
+                    case EAsyncPushWidgetState::AfterPush:
+                        AfterPush.Broadcast(PushedWidget);
+                        if (bFocusOnNewlyPushedWidget)
+                        {
+                            if (UWidget* WidgetToFocus = PushedWidget->GetDesiredFocusTarget())
+                            {
+                                WidgetToFocus->SetFocus();
+                            }
+                        }
+                        SetReadyToDestroy();
+                        break;
+                }
+            }
+            );
+    }
+
 }

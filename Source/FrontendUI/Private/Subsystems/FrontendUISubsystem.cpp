@@ -2,12 +2,10 @@
 
 
 #include "Subsystems/FrontendUISubsystem.h"
-#include "FrontendDebugHelper.h"
 #include "Engine/AssetManager.h"
 #include "Widgets/CommonActivatableWidgetContainer.h"
-#include "Widgets/Widget_PrimaryLayout.h"
 #include "Widgets/Widget_ActivatableBase.h"
-
+#include "Widgets/Widget_PrimaryLayout.h"
 
 UFrontendUISubsystem* UFrontendUISubsystem::Get(const UObject* WorldContextObject)
 {
@@ -41,8 +39,6 @@ void UFrontendUISubsystem::RegisteredCreatedPrimaryLayoutWidget(UWidget_PrimaryL
     check(InCreatedPrimaryLayout);
 
     CreatedPrimaryLayout = InCreatedPrimaryLayout;
-
-    Debug::Print(TEXT("Primary layout widget stored"));
 }
 
 void UFrontendUISubsystem::PushSoftWidgetToLayerStackAsync(const FGameplayTag& LayerTag, TSoftClassPtr<UWidget_ActivatableBase> SoftWidgetClass, TFunction<void(EAsyncPushWidgetState, UWidget_ActivatableBase*)> AsyncPushStateCallback)

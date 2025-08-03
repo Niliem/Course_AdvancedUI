@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
-#include "Widgets/Widget_ActivatableBase.h"
 #include "FrontendUISubsystem.generated.h"
 
 class UWidget_PrimaryLayout;

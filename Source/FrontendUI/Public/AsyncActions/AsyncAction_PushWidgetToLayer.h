@@ -3,12 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "AsyncAction_PushWidgetToLayer.generated.h"
 
 class UWidget_ActivatableBase;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPushWidgetToLayerAsyncSignature, UWidget_ActivatableBase*, Widget);
+
 /**
  * 
  */
@@ -25,9 +27,20 @@ public:
         UPARAM(meta = (Categories = "UI.Layer")) FGameplayTag LayerTag,
         bool bFocusOnNewlyPushedWidget = true);
 
+    //~ Begin UBlueprintAsyncActionBase Interface
+    virtual void Activate() override;
+    //~ End UBlueprintAsyncActionBase Interface
+    
     UPROPERTY(BlueprintAssignable)
     FOnPushWidgetToLayerAsyncSignature BeforePush;
 
     UPROPERTY(BlueprintAssignable)
     FOnPushWidgetToLayerAsyncSignature AfterPush;
+    
+private:
+    TWeakObjectPtr<UWorld> World;
+    TWeakObjectPtr<APlayerController> PlayerController;
+    TSoftClassPtr<UWidget_ActivatableBase> WidgetClass;
+    FGameplayTag LayerTag;
+    bool bFocusOnNewlyPushedWidget;
 };
