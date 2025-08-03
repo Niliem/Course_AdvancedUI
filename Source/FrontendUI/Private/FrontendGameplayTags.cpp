@@ -3,10 +3,10 @@
 
 #include "FrontendGameplayTags.h"
 
-namespace FrontendGameplayTags
+namespace UIGameplayTags
 {
-    UE_DEFINE_GAMEPLAY_TAG(Frontend_Layer_Modal, "Frontend.Layer.Modal");
-    UE_DEFINE_GAMEPLAY_TAG(Frontend_Layer_GameMenu, "Frontend.Layer.GameMenu");
-    UE_DEFINE_GAMEPLAY_TAG(Frontend_Layer_GameHUD, "Frontend.Layer.GameHUD");
-    UE_DEFINE_GAMEPLAY_TAG(Frontend_Layer_Frontend, "Frontend.Layer.Frontend");
+    UE_DEFINE_GAMEPLAY_TAG(UI_Layer_Modal, "UI.Layer.Modal");
+    UE_DEFINE_GAMEPLAY_TAG(UI_Layer_GameMenu, "UI.Layer.GameMenu");
+    UE_DEFINE_GAMEPLAY_TAG(UI_Layer_GameHUD, "UI.Layer.GameHUD");
+    UE_DEFINE_GAMEPLAY_TAG(UI_Layer_Frontend, "UI.Layer.Frontend");
 }

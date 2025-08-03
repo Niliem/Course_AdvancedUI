@@ -4,10 +4,10 @@
 
 #include "NativeGameplayTags.h"
 
-namespace FrontendGameplayTags
+namespace UIGameplayTags
 {
-    FRONTENDUI_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Frontend_Layer_Modal);
-    FRONTENDUI_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Frontend_Layer_GameMenu);
-    FRONTENDUI_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Frontend_Layer_GameHUD);
-    FRONTENDUI_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Frontend_Layer_Frontend);
-}; //FrontendGameplayTags
+    FRONTENDUI_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_Layer_Modal);
+    FRONTENDUI_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_Layer_GameMenu);
+    FRONTENDUI_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_Layer_GameHUD);
+    FRONTENDUI_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_Layer_Frontend);
+}; //UIGameplayTags
