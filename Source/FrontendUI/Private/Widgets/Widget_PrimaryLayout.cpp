@@ -2,7 +2,6 @@
 
 
 #include "Widgets/Widget_PrimaryLayout.h"
-#include "FrontendDebugHelper.h"
 
 UCommonActivatableWidgetContainerBase* UWidget_PrimaryLayout::FindWidgetLayerByTag(const FGameplayTag& InTag) const
 {
@@ -11,14 +10,13 @@ UCommonActivatableWidgetContainerBase* UWidget_PrimaryLayout::FindWidgetLayerByT
     return RegisteredWidgetLayerMap.FindRef(InTag);
 }
 
-void UWidget_PrimaryLayout::RegisterWidgetLayer(FGameplayTag InLayerTag, UCommonActivatableWidgetContainerBase* InLayerWidget)
+void UWidget_PrimaryLayout::RegisterLayer(FGameplayTag Tag, UCommonActivatableWidgetContainerBase* Widget)
 {
     if (IsDesignTime())
         return;
 
-    if (RegisteredWidgetLayerMap.Contains(InLayerTag))
+    if (RegisteredWidgetLayerMap.Contains(Tag))
         return;
 
-    RegisteredWidgetLayerMap.Add(InLayerTag, InLayerWidget);
-    Debug::Print(TEXT("Widget layer registered under the tag ") + InLayerTag.ToString());
+    RegisteredWidgetLayerMap.Add(Tag, Widget);
 }

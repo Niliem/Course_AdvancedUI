@@ -21,10 +21,10 @@ public:
     UCommonActivatableWidgetContainerBase* FindWidgetLayerByTag(const FGameplayTag& InTag) const;
 
 protected:
-    UFUNCTION(BlueprintCallable)
-    void RegisterWidgetLayer(UPARAM(meta = (Categories = "UI.Layer")) FGameplayTag InLayerTag, UCommonActivatableWidgetContainerBase* InLayerWidget);
+    UFUNCTION(BlueprintCallable, Category="Layer")
+    void RegisterLayer(UPARAM(meta = (Categories = "UI.Layer")) FGameplayTag Tag, UCommonActivatableWidgetContainerBase* Widget);
 
 private:
-    UPROPERTY(Transient)
-    TMap<FGameplayTag, UCommonActivatableWidgetContainerBase*> RegisteredWidgetLayerMap;
+    UPROPERTY(Transient, meta = (Categories = "UI.Layer"))
+    TMap<FGameplayTag, TObjectPtr<UCommonActivatableWidgetContainerBase>> RegisteredWidgetLayerMap;
 };
