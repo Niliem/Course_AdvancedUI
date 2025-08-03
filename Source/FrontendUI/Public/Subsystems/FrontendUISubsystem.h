@@ -4,9 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "Widgets/Widget_ActivatableBase.h"
 #include "FrontendUISubsystem.generated.h"
 
 class UWidget_PrimaryLayout;
+class UWidget_ActivatableBase;
+struct FGameplayTag;
+
+enum class EAsyncPushWidgetState : uint8
+{
+    BeforePush,
+    AfterPush
+};
 
 /**
  * 
@@ -25,6 +34,8 @@ public:
 
     UFUNCTION(BlueprintCallable)
     void RegisteredCreatedPrimaryLayoutWidget(UWidget_PrimaryLayout* InCreatedPrimaryLayout);
+
+    void PushSoftWidgetToLayerStackAsync(UPARAM(meta = (Categories = "UI.Layer")) const FGameplayTag& LayerTag, TSoftClassPtr<UWidget_ActivatableBase> SoftWidgetClass, TFunction<void(EAsyncPushWidgetState, UWidget_ActivatableBase*)> AsyncPushStateCallback);
 
 private:
     UPROPERTY(Transient)

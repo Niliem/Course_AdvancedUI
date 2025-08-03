@@ -3,6 +3,11 @@
 
 #include "Subsystems/FrontendUISubsystem.h"
 #include "FrontendDebugHelper.h"
+#include "Engine/AssetManager.h"
+#include "Widgets/CommonActivatableWidgetContainer.h"
+#include "Widgets/Widget_PrimaryLayout.h"
+#include "Widgets/Widget_ActivatableBase.h"
+
 
 UFrontendUISubsystem* UFrontendUISubsystem::Get(const UObject* WorldContextObject)
 {
@@ -25,7 +30,7 @@ bool UFrontendUISubsystem::ShouldCreateSubsystem(UObject* Outer) const
     {
         TArray<UClass*> FoundClasses;
         GetDerivedClasses(GetClass(), FoundClasses);
-        
+
         return FoundClasses.IsEmpty();
     }
     return false;
@@ -34,8 +39,34 @@ bool UFrontendUISubsystem::ShouldCreateSubsystem(UObject* Outer) const
 void UFrontendUISubsystem::RegisteredCreatedPrimaryLayoutWidget(UWidget_PrimaryLayout* InCreatedPrimaryLayout)
 {
     check(InCreatedPrimaryLayout);
-    
+
     CreatedPrimaryLayout = InCreatedPrimaryLayout;
 
     Debug::Print(TEXT("Primary layout widget stored"));
+}
+
+void UFrontendUISubsystem::PushSoftWidgetToLayerStackAsync(const FGameplayTag& LayerTag, TSoftClassPtr<UWidget_ActivatableBase> SoftWidgetClass, TFunction<void(EAsyncPushWidgetState, UWidget_ActivatableBase*)> AsyncPushStateCallback)
+{
+    check(!SoftWidgetClass.IsNull());
+
+    UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(SoftWidgetClass.ToSoftObjectPath(), FStreamableDelegate::CreateLambda(
+            [SoftWidgetClass, LayerTag, AsyncPushStateCallback, this]()
+            {
+                UClass* LoadedWidgetClass = SoftWidgetClass.Get();
+                check(LoadedWidgetClass);
+
+                check(CreatedPrimaryLayout);
+                if (UCommonActivatableWidgetContainerBase* FoundLayer = CreatedPrimaryLayout->FindWidgetLayerByTag(LayerTag))
+                {
+                    UWidget_ActivatableBase* CreatedWidget = FoundLayer->AddWidget<UWidget_ActivatableBase>(LoadedWidgetClass,
+                        [AsyncPushStateCallback](UWidget_ActivatableBase& CreatedWidgetInstance)
+                        {
+                            AsyncPushStateCallback(EAsyncPushWidgetState::BeforePush, &CreatedWidgetInstance);
+                        }
+                        );
+
+                    AsyncPushStateCallback(EAsyncPushWidgetState::AfterPush, CreatedWidget);
+                }
+            })
+        );
 }
