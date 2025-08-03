@@ -2,6 +2,7 @@
 
 
 #include "Widgets/Widget_PrimaryLayout.h"
+#include "FrontendDebugHelper.h"
 
 UCommonActivatableWidgetContainerBase* UWidget_PrimaryLayout::FindWidgetLayerByTag(const FGameplayTag& InTag) const
 {
@@ -19,4 +20,5 @@ void UWidget_PrimaryLayout::RegisterWidgetLayer(FGameplayTag InLayerTag, UCommon
         return;
 
     RegisteredWidgetLayerMap.Add(InLayerTag, InLayerWidget);
+    Debug::Print(TEXT("Widget layer registered under the tag ") + InLayerTag.ToString());
 }
