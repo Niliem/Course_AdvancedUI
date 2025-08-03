@@ -4,7 +4,7 @@
 #include "FrontendFunctionLibrary.h"
 #include "Settings/FrontendDeveloperSettings.h"
 
-TSoftClassPtr<UWidget_ActivatableBase> UFrontendFunctionLibrary::GetFrontendWidgetClassByTag(FGameplayTag WidgetTag)
+TSoftClassPtr<UCommonActivatableWidget> UFrontendFunctionLibrary::GetFrontendWidgetClassByTag(FGameplayTag WidgetTag)
 {
     const UFrontendDeveloperSettings* FrontendDeveloperSettings = GetDefault<UFrontendDeveloperSettings>();
 

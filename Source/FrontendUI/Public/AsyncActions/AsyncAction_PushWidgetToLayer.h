@@ -7,9 +7,7 @@
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "AsyncAction_PushWidgetToLayer.generated.h"
 
-class UWidget_ActivatableBase;
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPushWidgetToLayerAsyncSignature, UWidget_ActivatableBase*, Widget);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPushWidgetToLayerAsyncSignature, UCommonActivatableWidget*, Widget);
 
 /**
  * 
@@ -23,7 +21,7 @@ public:
     UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject", HidePin = "WorldContextObject", BlueprintInternalUseOnly = "true" ))
     static UAsyncAction_PushWidgetToLayer* PushWidgetToLayer(const UObject* WorldContextObject,
         APlayerController* PlayerController,
-        TSoftClassPtr<UWidget_ActivatableBase> WidgetClass,
+        TSoftClassPtr<UCommonActivatableWidget> WidgetClass,
         UPARAM(meta = (Categories = "UI.Layer")) FGameplayTag LayerTag,
         bool bFocusOnNewlyPushedWidget = true);
 
@@ -40,7 +38,7 @@ public:
 private:
     TWeakObjectPtr<UWorld> World;
     TWeakObjectPtr<APlayerController> PlayerController;
-    TSoftClassPtr<UWidget_ActivatableBase> WidgetClass;
+    TSoftClassPtr<UCommonActivatableWidget> WidgetClass;
     FGameplayTag LayerTag;
     bool bFocusOnNewlyPushedWidget;
 };

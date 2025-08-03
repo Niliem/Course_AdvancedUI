@@ -7,7 +7,6 @@
 #include "GameplayTagContainer.h"
 #include "FrontendFunctionLibrary.generated.h"
 
-class UWidget_ActivatableBase;
 
 /**
  * 
@@ -19,5 +18,5 @@ class FRONTENDUI_API UFrontendFunctionLibrary : public UBlueprintFunctionLibrary
 
 public:
     UFUNCTION(BlueprintPure, Category = "Frontend")
-    static TSoftClassPtr<UWidget_ActivatableBase> GetFrontendWidgetClassByTag(UPARAM(meta = (Categories = "Frontend.Widget")) FGameplayTag WidgetTag);
+    static TSoftClassPtr<UCommonActivatableWidget> GetFrontendWidgetClassByTag(UPARAM(meta = (Categories = "Frontend.Widget")) FGameplayTag WidgetTag);
 };

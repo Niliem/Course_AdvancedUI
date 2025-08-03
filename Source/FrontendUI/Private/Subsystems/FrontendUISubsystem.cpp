@@ -2,9 +2,9 @@
 
 
 #include "Subsystems/FrontendUISubsystem.h"
+#include "CommonActivatableWidget.h"
 #include "Engine/AssetManager.h"
 #include "Widgets/CommonActivatableWidgetContainer.h"
-#include "Widgets/Widget_ActivatableBase.h"
 #include "Widgets/Widget_PrimaryLayout.h"
 
 UFrontendUISubsystem* UFrontendUISubsystem::Get(const UObject* WorldContextObject)
@@ -41,7 +41,7 @@ void UFrontendUISubsystem::RegisteredCreatedPrimaryLayoutWidget(UWidget_PrimaryL
     CreatedPrimaryLayout = InCreatedPrimaryLayout;
 }
 
-void UFrontendUISubsystem::PushSoftWidgetToLayerStackAsync(const FGameplayTag& LayerTag, TSoftClassPtr<UWidget_ActivatableBase> SoftWidgetClass, TFunction<void(EAsyncPushWidgetState, UWidget_ActivatableBase*)> AsyncPushStateCallback)
+void UFrontendUISubsystem::PushSoftWidgetToLayerStackAsync(const FGameplayTag& LayerTag, TSoftClassPtr<UCommonActivatableWidget> SoftWidgetClass, TFunction<void(EAsyncPushWidgetState, UCommonActivatableWidget*)> AsyncPushStateCallback)
 {
     check(!SoftWidgetClass.IsNull());
 
@@ -54,8 +54,8 @@ void UFrontendUISubsystem::PushSoftWidgetToLayerStackAsync(const FGameplayTag& L
                 check(CreatedPrimaryLayout);
                 if (UCommonActivatableWidgetContainerBase* FoundLayer = CreatedPrimaryLayout->FindWidgetLayerByTag(LayerTag))
                 {
-                    UWidget_ActivatableBase* CreatedWidget = FoundLayer->AddWidget<UWidget_ActivatableBase>(LoadedWidgetClass,
-                        [AsyncPushStateCallback](UWidget_ActivatableBase& CreatedWidgetInstance)
+                    UCommonActivatableWidget* CreatedWidget = FoundLayer->AddWidget<UCommonActivatableWidget>(LoadedWidgetClass,
+                        [AsyncPushStateCallback](UCommonActivatableWidget& CreatedWidgetInstance)
                         {
                             AsyncPushStateCallback(EAsyncPushWidgetState::BeforePush, &CreatedWidgetInstance);
                         }

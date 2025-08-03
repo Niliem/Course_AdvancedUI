@@ -2,10 +2,10 @@
 
 
 #include "AsyncActions/AsyncAction_PushWidgetToLayer.h"
-#include "Widgets/Widget_ActivatableBase.h"
+#include "CommonActivatableWidget.h"
 #include "Subsystems/FrontendUISubsystem.h"
 
-UAsyncAction_PushWidgetToLayer* UAsyncAction_PushWidgetToLayer::PushWidgetToLayer(const UObject* WorldContextObject, APlayerController* PlayerController, TSoftClassPtr<UWidget_ActivatableBase> WidgetClass, FGameplayTag LayerTag, bool bFocusOnNewlyPushedWidget)
+UAsyncAction_PushWidgetToLayer* UAsyncAction_PushWidgetToLayer::PushWidgetToLayer(const UObject* WorldContextObject, APlayerController* PlayerController, TSoftClassPtr<UCommonActivatableWidget> WidgetClass, FGameplayTag LayerTag, bool bFocusOnNewlyPushedWidget)
 {
     checkf(!WidgetClass.IsNull(), TEXT("PushSoftWidgetToStack was passed a null soft widget class"));
 
@@ -33,7 +33,7 @@ void UAsyncAction_PushWidgetToLayer::Activate()
     if (UFrontendUISubsystem* FrontendUISubsystem = UFrontendUISubsystem::Get(World.Get()))
     {
         FrontendUISubsystem->PushSoftWidgetToLayerStackAsync(LayerTag, WidgetClass,
-            [this](EAsyncPushWidgetState PushState, UWidget_ActivatableBase* PushedWidget)
+            [this](EAsyncPushWidgetState PushState, UCommonActivatableWidget* PushedWidget)
             {
                 switch (PushState)
                 {
