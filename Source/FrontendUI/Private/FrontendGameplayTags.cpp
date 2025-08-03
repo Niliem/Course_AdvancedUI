@@ -10,3 +10,9 @@ namespace UIGameplayTags
     UE_DEFINE_GAMEPLAY_TAG(UI_Layer_GameHUD, "UI.Layer.GameHUD");
     UE_DEFINE_GAMEPLAY_TAG(UI_Layer_Frontend, "UI.Layer.Frontend");
 }
+
+namespace FrontendGameplayTags
+{
+    UE_DEFINE_GAMEPLAY_TAG(Frontend_Widget_PressAnyKey, "Frontend.Widget.PressAnyKey");
+    UE_DEFINE_GAMEPLAY_TAG(Frontend_Widget_MainMenu, "Frontend.Widget.MainMenu");
+}; //FrontendGameplayTags
