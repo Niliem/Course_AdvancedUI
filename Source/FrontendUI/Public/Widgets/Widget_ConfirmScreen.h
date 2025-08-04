@@ -10,6 +10,38 @@
 class UDynamicEntryBox;
 class UCommonTextBlock;
 
+USTRUCT(BlueprintType)
+struct FConfirmScreenButtonInfo
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    EConfirmScreenButtonType ButtonType = EConfirmScreenButtonType::Unknown;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FText ButtonTextToDisplay;
+};
+
+UCLASS()
+class FRONTENDUI_API UConfirmScreenInfoObject : public UObject
+{
+    GENERATED_BODY()
+
+public:
+    static UConfirmScreenInfoObject* CreateOkScreen(const FText& ScreenTitle, const FText& ScreenMessage);
+    static UConfirmScreenInfoObject* CreateYesNoScreen(const FText& ScreenTitle, const FText& ScreenMessage);
+    static UConfirmScreenInfoObject* CreateOkCancelScreen(const FText& ScreenTitle, const FText& ScreenMessage);
+    
+    UPROPERTY(Transient)
+    FText ScreenTitle;
+
+    UPROPERTY(Transient)
+    FText ScreenMessage;
+
+    UPROPERTY(Transient)
+    TArray<FConfirmScreenButtonInfo> ScreenButtons;
+};
+
 /**
  * 
  */
