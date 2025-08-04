@@ -56,5 +56,5 @@ void UAsyncAction_PushWidgetToLayer::Activate()
             }
             );
     }
-
+    SetReadyToDestroy();
 }
