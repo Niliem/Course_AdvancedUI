@@ -50,9 +50,12 @@ class FRONTENDUI_API UWidget_ConfirmScreen : public UCommonActivatableWidget
 {
 	GENERATED_BODY()
 
+public:
+    void InitConfirmScreen(UConfirmScreenInfoObject* ScreenInfoObject, TFunction<void (EConfirmScreenButtonType)> ClickedButtonCallback);
+    
 private:
     UPROPERTY(meta = (BindWidgetOptional))
-    UCommonTextBlock* CommonTextBlock_ButtonText;
+    UCommonTextBlock* CommonTextBlock_Title;
 
     UPROPERTY(meta = (BindWidgetOptional))
     UCommonTextBlock* CommonTextBlock_Message;
