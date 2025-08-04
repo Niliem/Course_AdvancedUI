@@ -64,7 +64,7 @@ UConfirmScreenInfoObject* UConfirmScreenInfoObject::CreateOkCancelScreen(const F
 
 void UWidget_ConfirmScreen::InitConfirmScreen(UConfirmScreenInfoObject* ScreenInfoObject, TFunction<void(EConfirmScreenButtonType)> ClickedButtonCallback)
 {
-    check(ScreenInfoObject && CommonTextBlock_Title && CommonTextBlock_Message && DynamicEntryBox_Buttons)
+    check(ScreenInfoObject && CommonTextBlock_Title && CommonTextBlock_Message && DynamicEntryBox_Buttons);
 
     CommonTextBlock_Title->SetText(ScreenInfoObject->ScreenTitle);
     CommonTextBlock_Message->SetText(ScreenInfoObject->ScreenMessage);
@@ -79,7 +79,7 @@ void UWidget_ConfirmScreen::InitConfirmScreen(UConfirmScreenInfoObject* ScreenIn
             );
     }
 
-    check(!ScreenInfoObject->ScreenButtons.IsEmpty())
+    check(!ScreenInfoObject->ScreenButtons.IsEmpty());
 
     for (const FConfirmScreenButtonInfo& ButtonInfo : ScreenInfoObject->ScreenButtons)
     {

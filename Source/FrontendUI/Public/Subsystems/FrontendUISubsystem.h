@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "FrontendEnumTypes.h"
 #include "FrontendUISubsystem.generated.h"
 
 class UFrontendCommonButtonBase;
@@ -26,7 +27,7 @@ enum class EAsyncPushWidgetState : uint8
 UCLASS()
 class FRONTENDUI_API UFrontendUISubsystem : public UGameInstanceSubsystem
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
     static UFrontendUISubsystem* Get(const UObject* WorldContextObject);
@@ -39,10 +40,11 @@ public:
     void RegisteredCreatedPrimaryLayoutWidget(UWidget_PrimaryLayout* InCreatedPrimaryLayout);
 
     void PushSoftWidgetToLayerStackAsync(UPARAM(meta = (Categories = "UI.Layer")) const FGameplayTag& LayerTag, TSoftClassPtr<UCommonActivatableWidget> SoftWidgetClass, TFunction<void(EAsyncPushWidgetState, UCommonActivatableWidget*)> AsyncPushStateCallback);
+    void PushConfirmScreenAsync(EConfirmScreenType ConfirmScreenType, const FText& Title, const FText& Message, TFunction<void(EConfirmScreenButtonType)> ButtonClickedCallback);
 
     UPROPERTY(BlueprintAssignable)
     FOnButtonDescriptionTextUpdatedDelegate OnButtonDescriptionTextUpdated;
-    
+
 private:
     UPROPERTY(Transient)
     TObjectPtr<UWidget_PrimaryLayout> CreatedPrimaryLayout;

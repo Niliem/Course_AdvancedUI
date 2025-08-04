@@ -6,6 +6,9 @@
 #include "Engine/AssetManager.h"
 #include "Widgets/CommonActivatableWidgetContainer.h"
 #include "Widgets/Widget_PrimaryLayout.h"
+#include "FrontendFunctionLibrary.h"
+#include "FrontendGameplayTags.h"
+#include "Widgets/Widget_ConfirmScreen.h"
 
 UFrontendUISubsystem* UFrontendUISubsystem::Get(const UObject* WorldContextObject)
 {
@@ -64,5 +67,39 @@ void UFrontendUISubsystem::PushSoftWidgetToLayerStackAsync(const FGameplayTag& L
                     AsyncPushStateCallback(EAsyncPushWidgetState::AfterPush, CreatedWidget);
                 }
             })
+        );
+}
+
+void UFrontendUISubsystem::PushConfirmScreenAsync(EConfirmScreenType ConfirmScreenType, const FText& Title, const FText& Message, TFunction<void(EConfirmScreenButtonType)> ButtonClickedCallback)
+{
+    UConfirmScreenInfoObject* ConfirmScreenInfoObject = nullptr;
+    switch (ConfirmScreenType)
+    {
+        case EConfirmScreenType::Ok:
+            ConfirmScreenInfoObject = UConfirmScreenInfoObject::CreateOkScreen(Title, Message);
+            break;
+        case EConfirmScreenType::YesNo:
+            ConfirmScreenInfoObject = UConfirmScreenInfoObject::CreateYesNoScreen(Title, Message);
+            break;
+        case EConfirmScreenType::OkCancel:
+            ConfirmScreenInfoObject = UConfirmScreenInfoObject::CreateOkCancelScreen(Title, Message);
+            break;
+        case EConfirmScreenType::Unknown:
+            break;
+    }
+
+    check(ConfirmScreenInfoObject);
+
+    PushSoftWidgetToLayerStackAsync(UIGameplayTags::UI_Layer_Modal, UFrontendFunctionLibrary::GetFrontendWidgetClassByTag(FrontendGameplayTags::Frontend_Widget_Confirm),
+        [ConfirmScreenInfoObject, ButtonClickedCallback](EAsyncPushWidgetState PushState, UCommonActivatableWidget* PushedWidget)
+        {
+            if (PushState == EAsyncPushWidgetState::BeforePush)
+            {
+                if (UWidget_ConfirmScreen* CreatedScreen = CastChecked<UWidget_ConfirmScreen>(PushedWidget))
+                {
+                    CreatedScreen->InitConfirmScreen(ConfirmScreenInfoObject, ButtonClickedCallback);
+                }
+            }
+        }
         );
 }
