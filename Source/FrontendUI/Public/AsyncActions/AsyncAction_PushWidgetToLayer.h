@@ -7,7 +7,7 @@
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "AsyncAction_PushWidgetToLayer.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPushWidgetToLayerAsyncSignature, UCommonActivatableWidget*, Widget);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPushWidgetToLayerAsyncDelegate, UCommonActivatableWidget*, Widget);
 
 /**
  * 
@@ -30,10 +30,10 @@ public:
     //~ End UBlueprintAsyncActionBase Interface
     
     UPROPERTY(BlueprintAssignable)
-    FOnPushWidgetToLayerAsyncSignature BeforePush;
+    FOnPushWidgetToLayerAsyncDelegate BeforePush;
 
     UPROPERTY(BlueprintAssignable)
-    FOnPushWidgetToLayerAsyncSignature AfterPush;
+    FOnPushWidgetToLayerAsyncDelegate AfterPush;
     
 private:
     TWeakObjectPtr<UWorld> World;

@@ -6,9 +6,13 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "FrontendUISubsystem.generated.h"
 
+class UFrontendCommonButtonBase;
 class UCommonActivatableWidget;
 class UWidget_PrimaryLayout;
 struct FGameplayTag;
+
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnButtonDescriptionTextUpdatedDelegate, UFrontendCommonButtonBase*, BroadcastingButton, FText, Description);
 
 enum class EAsyncPushWidgetState : uint8
 {
@@ -36,6 +40,9 @@ public:
 
     void PushSoftWidgetToLayerStackAsync(UPARAM(meta = (Categories = "UI.Layer")) const FGameplayTag& LayerTag, TSoftClassPtr<UCommonActivatableWidget> SoftWidgetClass, TFunction<void(EAsyncPushWidgetState, UCommonActivatableWidget*)> AsyncPushStateCallback);
 
+    UPROPERTY(BlueprintAssignable)
+    FOnButtonDescriptionTextUpdatedDelegate OnButtonDescriptionTextUpdated;
+    
 private:
     UPROPERTY(Transient)
     TObjectPtr<UWidget_PrimaryLayout> CreatedPrimaryLayout;
