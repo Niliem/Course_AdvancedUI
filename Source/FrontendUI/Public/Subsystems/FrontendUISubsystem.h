@@ -36,8 +36,8 @@ public:
     virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
     //~ End USubsystem Interface
 
-    UFUNCTION(BlueprintCallable)
-    void RegisteredCreatedPrimaryLayoutWidget(UWidget_PrimaryLayout* InCreatedPrimaryLayout);
+    UFUNCTION(BlueprintCallable, Category="UI")
+    UWidget_PrimaryLayout* SetupPrimaryLayoutWidget(APlayerController* OwnerController, int32 ZOrder);
 
     void PushSoftWidgetToLayerStackAsync(UPARAM(meta = (Categories = "UI.Layer")) const FGameplayTag& LayerTag, TSoftClassPtr<UCommonActivatableWidget> SoftWidgetClass, TFunction<void(EAsyncPushWidgetState, UCommonActivatableWidget*)> AsyncPushStateCallback);
     void PushConfirmScreenAsync(EConfirmScreenType ConfirmScreenType, const FText& Title, const FText& Message, TFunction<void(EConfirmScreenButtonType)> ButtonClickedCallback);

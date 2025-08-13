@@ -10,37 +10,6 @@
 class UDynamicEntryBox;
 class UCommonTextBlock;
 
-USTRUCT(BlueprintType)
-struct FConfirmScreenButtonInfo
-{
-    GENERATED_BODY()
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    EConfirmScreenButtonType ButtonType = EConfirmScreenButtonType::Unknown;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FText ButtonTextToDisplay;
-};
-
-UCLASS()
-class FRONTENDUI_API UConfirmScreenInfoObject : public UObject
-{
-    GENERATED_BODY()
-
-public:
-    static UConfirmScreenInfoObject* CreateOkScreen(const FText& ScreenTitle, const FText& ScreenMessage);
-    static UConfirmScreenInfoObject* CreateYesNoScreen(const FText& ScreenTitle, const FText& ScreenMessage);
-    static UConfirmScreenInfoObject* CreateOkCancelScreen(const FText& ScreenTitle, const FText& ScreenMessage);
-    
-    UPROPERTY(Transient)
-    FText ScreenTitle;
-
-    UPROPERTY(Transient)
-    FText ScreenMessage;
-
-    UPROPERTY(Transient)
-    TArray<FConfirmScreenButtonInfo> ScreenButtons;
-};
 
 /**
  * 
@@ -51,7 +20,25 @@ class FRONTENDUI_API UWidget_ConfirmScreen : public UCommonActivatableWidget
 	GENERATED_BODY()
 
 public:
-    void InitConfirmScreen(UConfirmScreenInfoObject* ScreenInfoObject, TFunction<void (EConfirmScreenButtonType)> ClickedButtonCallback);
+    struct FConfirmScreenButtonInfo
+    {
+        EConfirmScreenButtonType Type = EConfirmScreenButtonType::Unknown;
+        FText TextToDisplay = FText::GetEmpty();
+    };
+
+    struct FConfirmScreenInfo
+    {
+        FText Title = FText::GetEmpty();
+        FText Message = FText::GetEmpty();
+        TArray<FConfirmScreenButtonInfo> AvailableButtons {};
+    };
+    
+    static FConfirmScreenInfo CreateOkScreen(const FText& ScreenTitle, const FText& ScreenMessage);
+    static FConfirmScreenInfo CreateYesNoScreen(const FText& ScreenTitle, const FText& ScreenMessage);
+    static FConfirmScreenInfo CreateOkCancelScreen(const FText& ScreenTitle, const FText& ScreenMessage);
+    static FConfirmScreenInfo CreateYesNoCancelScreen(const FText& ScreenTitle, const FText& ScreenMessage);
+    
+    void InitConfirmScreen(const FConfirmScreenInfo& ConfirmScreenInfo, TFunction<void (EConfirmScreenButtonType)> ClickedButtonCallback);
     
 private:
     UPROPERTY(meta = (BindWidgetOptional))

@@ -8,6 +8,7 @@
 #include "Widgets/Widget_PrimaryLayout.h"
 #include "FrontendFunctionLibrary.h"
 #include "FrontendGameplayTags.h"
+#include "Settings/FrontendDeveloperSettings.h"
 #include "Widgets/Widget_ConfirmScreen.h"
 
 UFrontendUISubsystem* UFrontendUISubsystem::Get(const UObject* WorldContextObject)
@@ -37,11 +38,22 @@ bool UFrontendUISubsystem::ShouldCreateSubsystem(UObject* Outer) const
     return false;
 }
 
-void UFrontendUISubsystem::RegisteredCreatedPrimaryLayoutWidget(UWidget_PrimaryLayout* InCreatedPrimaryLayout)
+UWidget_PrimaryLayout* UFrontendUISubsystem::SetupPrimaryLayoutWidget(APlayerController* OwnerController, int32 ZOrder)
 {
-    check(InCreatedPrimaryLayout);
+    const UFrontendDeveloperSettings* FrontendDeveloperSettings = GetDefault<UFrontendDeveloperSettings>();
+    if (!FrontendDeveloperSettings)
+        return nullptr;
+    
+    TSubclassOf<UWidget_PrimaryLayout> PrimaryLayoutClass = FrontendDeveloperSettings->PrimaryLayoutClass;
+    if (!PrimaryLayoutClass)
+        return nullptr;
 
-    CreatedPrimaryLayout = InCreatedPrimaryLayout;
+    CreatedPrimaryLayout = Cast<UWidget_PrimaryLayout>(CreateWidget(OwnerController, PrimaryLayoutClass));
+    if (!CreatedPrimaryLayout)
+        return nullptr;
+
+    CreatedPrimaryLayout->AddToViewport(ZOrder);
+    return CreatedPrimaryLayout;
 }
 
 void UFrontendUISubsystem::PushSoftWidgetToLayerStackAsync(const FGameplayTag& LayerTag, TSoftClassPtr<UCommonActivatableWidget> SoftWidgetClass, TFunction<void(EAsyncPushWidgetState, UCommonActivatableWidget*)> AsyncPushStateCallback)
@@ -72,32 +84,33 @@ void UFrontendUISubsystem::PushSoftWidgetToLayerStackAsync(const FGameplayTag& L
 
 void UFrontendUISubsystem::PushConfirmScreenAsync(EConfirmScreenType ConfirmScreenType, const FText& Title, const FText& Message, TFunction<void(EConfirmScreenButtonType)> ButtonClickedCallback)
 {
-    UConfirmScreenInfoObject* ConfirmScreenInfoObject = nullptr;
+    UWidget_ConfirmScreen::FConfirmScreenInfo ConfirmScreenInfo;
     switch (ConfirmScreenType)
     {
         case EConfirmScreenType::Ok:
-            ConfirmScreenInfoObject = UConfirmScreenInfoObject::CreateOkScreen(Title, Message);
+            ConfirmScreenInfo = UWidget_ConfirmScreen::CreateOkScreen(Title, Message);
             break;
         case EConfirmScreenType::YesNo:
-            ConfirmScreenInfoObject = UConfirmScreenInfoObject::CreateYesNoScreen(Title, Message);
+            ConfirmScreenInfo = UWidget_ConfirmScreen::CreateYesNoScreen(Title, Message);
             break;
         case EConfirmScreenType::OkCancel:
-            ConfirmScreenInfoObject = UConfirmScreenInfoObject::CreateOkCancelScreen(Title, Message);
+            ConfirmScreenInfo = UWidget_ConfirmScreen::CreateOkCancelScreen(Title, Message);
             break;
+        case EConfirmScreenType::YesNoCancel:
+            ConfirmScreenInfo = UWidget_ConfirmScreen::CreateOkCancelScreen(Title, Message);
+        break;
         case EConfirmScreenType::Unknown:
             break;
     }
 
-    check(ConfirmScreenInfoObject);
-
     PushSoftWidgetToLayerStackAsync(UIGameplayTags::UI_Layer_Modal, UFrontendFunctionLibrary::GetFrontendWidgetClassByTag(FrontendGameplayTags::Frontend_Widget_Confirm),
-        [ConfirmScreenInfoObject, ButtonClickedCallback](EAsyncPushWidgetState PushState, UCommonActivatableWidget* PushedWidget)
+        [ConfirmScreenInfo, ButtonClickedCallback](EAsyncPushWidgetState PushState, UCommonActivatableWidget* PushedWidget)
         {
             if (PushState == EAsyncPushWidgetState::BeforePush)
             {
                 if (UWidget_ConfirmScreen* CreatedScreen = CastChecked<UWidget_ConfirmScreen>(PushedWidget))
                 {
-                    CreatedScreen->InitConfirmScreen(ConfirmScreenInfoObject, ButtonClickedCallback);
+                    CreatedScreen->InitConfirmScreen(ConfirmScreenInfo, ButtonClickedCallback);
                 }
             }
         }

@@ -8,6 +8,7 @@ enum class EConfirmScreenType : uint8
     Ok,
     YesNo,
     OkCancel,
+    YesNoCancel,
     Unknown UMETA(Hidden)
 };
 

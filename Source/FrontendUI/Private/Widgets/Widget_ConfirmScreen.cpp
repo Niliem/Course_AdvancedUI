@@ -7,102 +7,111 @@
 #include "Widgets/Components/FrontendCommonButtonBase.h"
 #include "ICommonInputModule.h"
 
-UConfirmScreenInfoObject* UConfirmScreenInfoObject::CreateOkScreen(const FText& ScreenTitle, const FText& ScreenMessage)
+UWidget_ConfirmScreen::FConfirmScreenInfo UWidget_ConfirmScreen::CreateOkScreen(const FText& ScreenTitle, const FText& ScreenMessage)
 {
-    UConfirmScreenInfoObject* ConfirmScreenInfoObject = NewObject<UConfirmScreenInfoObject>();
-    ConfirmScreenInfoObject->ScreenTitle = ScreenTitle;
-    ConfirmScreenInfoObject->ScreenMessage = ScreenMessage;
+    FConfirmScreenInfo ConfirmScreenInfo;
+    ConfirmScreenInfo.Title = ScreenTitle;
+    ConfirmScreenInfo.Message = ScreenMessage;
 
     FConfirmScreenButtonInfo OkButtonInfo;
-    OkButtonInfo.ButtonType = EConfirmScreenButtonType::Closed;
-    OkButtonInfo.ButtonTextToDisplay = FText::FromString(TEXT("OK"));
+    OkButtonInfo.Type = EConfirmScreenButtonType::Closed;
+    OkButtonInfo.TextToDisplay = FText::FromString(TEXT("OK"));
 
-    ConfirmScreenInfoObject->ScreenButtons.Add(OkButtonInfo);
+    ConfirmScreenInfo.AvailableButtons.Add(OkButtonInfo);
 
-    return ConfirmScreenInfoObject;
+    return ConfirmScreenInfo;
 }
 
-UConfirmScreenInfoObject* UConfirmScreenInfoObject::CreateYesNoScreen(const FText& ScreenTitle, const FText& ScreenMessage)
+UWidget_ConfirmScreen::FConfirmScreenInfo UWidget_ConfirmScreen::CreateYesNoScreen(const FText& ScreenTitle, const FText& ScreenMessage)
 {
-    UConfirmScreenInfoObject* ConfirmScreenInfoObject = NewObject<UConfirmScreenInfoObject>();
-    ConfirmScreenInfoObject->ScreenTitle = ScreenTitle;
-    ConfirmScreenInfoObject->ScreenMessage = ScreenMessage;
+    FConfirmScreenInfo ConfirmScreenInfo;
+    ConfirmScreenInfo.Title = ScreenTitle;
+    ConfirmScreenInfo.Message = ScreenMessage;
 
     FConfirmScreenButtonInfo YesButtonInfo;
-    YesButtonInfo.ButtonType = EConfirmScreenButtonType::Confirmed;
-    YesButtonInfo.ButtonTextToDisplay = FText::FromString(TEXT("Yes"));
+    YesButtonInfo.Type = EConfirmScreenButtonType::Confirmed;
+    YesButtonInfo.TextToDisplay = FText::FromString(TEXT("Yes"));
 
     FConfirmScreenButtonInfo NoButtonInfo;
-    NoButtonInfo.ButtonType = EConfirmScreenButtonType::Cancelled;
-    NoButtonInfo.ButtonTextToDisplay = FText::FromString(TEXT("No"));
+    NoButtonInfo.Type = EConfirmScreenButtonType::Cancelled;
+    NoButtonInfo.TextToDisplay = FText::FromString(TEXT("No"));
 
-    ConfirmScreenInfoObject->ScreenButtons.Add(YesButtonInfo);
-    ConfirmScreenInfoObject->ScreenButtons.Add(NoButtonInfo);
+    ConfirmScreenInfo.AvailableButtons.Add(YesButtonInfo);
+    ConfirmScreenInfo.AvailableButtons.Add(NoButtonInfo);
 
-    return ConfirmScreenInfoObject;
+    return ConfirmScreenInfo;
 }
 
-UConfirmScreenInfoObject* UConfirmScreenInfoObject::CreateOkCancelScreen(const FText& ScreenTitle, const FText& ScreenMessage)
+UWidget_ConfirmScreen::FConfirmScreenInfo UWidget_ConfirmScreen::CreateOkCancelScreen(const FText& ScreenTitle, const FText& ScreenMessage)
 {
-    UConfirmScreenInfoObject* ConfirmScreenInfoObject = NewObject<UConfirmScreenInfoObject>();
-    ConfirmScreenInfoObject->ScreenTitle = ScreenTitle;
-    ConfirmScreenInfoObject->ScreenMessage = ScreenMessage;
+    FConfirmScreenInfo ConfirmScreenInfo;
+    ConfirmScreenInfo.Title = ScreenTitle;
+    ConfirmScreenInfo.Message = ScreenMessage;
 
     FConfirmScreenButtonInfo OkButtonInfo;
-    OkButtonInfo.ButtonType = EConfirmScreenButtonType::Confirmed;
-    OkButtonInfo.ButtonTextToDisplay = FText::FromString(TEXT("OK"));
+    OkButtonInfo.Type = EConfirmScreenButtonType::Confirmed;
+    OkButtonInfo.TextToDisplay = FText::FromString(TEXT("OK"));
 
     FConfirmScreenButtonInfo CancelButtonInfo;
-    CancelButtonInfo.ButtonType = EConfirmScreenButtonType::Closed;
-    CancelButtonInfo.ButtonTextToDisplay = FText::FromString(TEXT("Cancel"));
+    CancelButtonInfo.Type = EConfirmScreenButtonType::Closed;
+    CancelButtonInfo.TextToDisplay = FText::FromString(TEXT("Cancel"));
 
-    ConfirmScreenInfoObject->ScreenButtons.Add(OkButtonInfo);
-    ConfirmScreenInfoObject->ScreenButtons.Add(CancelButtonInfo);
+    ConfirmScreenInfo.AvailableButtons.Add(OkButtonInfo);
+    ConfirmScreenInfo.AvailableButtons.Add(CancelButtonInfo);
 
-    return ConfirmScreenInfoObject;
+    return ConfirmScreenInfo;
 }
 
-void UWidget_ConfirmScreen::InitConfirmScreen(UConfirmScreenInfoObject* ScreenInfoObject, TFunction<void(EConfirmScreenButtonType)> ClickedButtonCallback)
+UWidget_ConfirmScreen::FConfirmScreenInfo UWidget_ConfirmScreen::CreateYesNoCancelScreen(const FText& ScreenTitle, const FText& ScreenMessage)
 {
-    check(ScreenInfoObject && CommonTextBlock_Title && CommonTextBlock_Message && DynamicEntryBox_Buttons);
+    FConfirmScreenInfo ConfirmScreenInfo;
+    ConfirmScreenInfo.Title = ScreenTitle;
+    ConfirmScreenInfo.Message = ScreenMessage;
 
-    CommonTextBlock_Title->SetText(ScreenInfoObject->ScreenTitle);
-    CommonTextBlock_Message->SetText(ScreenInfoObject->ScreenMessage);
+    FConfirmScreenButtonInfo YesButtonInfo;
+    YesButtonInfo.Type = EConfirmScreenButtonType::Confirmed;
+    YesButtonInfo.TextToDisplay = FText::FromString(TEXT("Yes"));
+
+    FConfirmScreenButtonInfo NoButtonInfo;
+    NoButtonInfo.Type = EConfirmScreenButtonType::Cancelled;
+    NoButtonInfo.TextToDisplay = FText::FromString(TEXT("No"));
+
+    FConfirmScreenButtonInfo CancelButtonInfo;
+    CancelButtonInfo.Type = EConfirmScreenButtonType::Closed;
+    CancelButtonInfo.TextToDisplay = FText::FromString(TEXT("Cancel"));
+
+    ConfirmScreenInfo.AvailableButtons.Add(YesButtonInfo);
+    ConfirmScreenInfo.AvailableButtons.Add(NoButtonInfo);
+    ConfirmScreenInfo.AvailableButtons.Add(CancelButtonInfo);
+
+    return ConfirmScreenInfo;
+}
+
+void UWidget_ConfirmScreen::InitConfirmScreen(const FConfirmScreenInfo& ConfirmScreenInfo, TFunction<void(EConfirmScreenButtonType)> ClickedButtonCallback)
+{
+    check(CommonTextBlock_Title && CommonTextBlock_Message && DynamicEntryBox_Buttons);
+
+    CommonTextBlock_Title->SetText(ConfirmScreenInfo.Title);
+    CommonTextBlock_Message->SetText(ConfirmScreenInfo.Message);
 
     if (DynamicEntryBox_Buttons->GetNumEntries() != 0)
     {
         DynamicEntryBox_Buttons->Reset<UFrontendCommonButtonBase>(
-            [](UFrontendCommonButtonBase& ExistingButton)
+            [](const UFrontendCommonButtonBase& ExistingButton)
             {
                 ExistingButton.OnClicked().Clear();
             }
             );
     }
 
-    check(!ScreenInfoObject->ScreenButtons.IsEmpty());
-
-    for (const FConfirmScreenButtonInfo& ButtonInfo : ScreenInfoObject->ScreenButtons)
+    for (const FConfirmScreenButtonInfo& ButtonInfo : ConfirmScreenInfo.AvailableButtons)
     {
-        FDataTableRowHandle ActionRow;
-        switch (ButtonInfo.ButtonType)
-        {
-            case EConfirmScreenButtonType::Cancelled:
-                ActionRow = ICommonInputModule::GetSettings().GetDefaultBackAction();
-                break;
-            case EConfirmScreenButtonType::Closed:
-                ActionRow = ICommonInputModule::GetSettings().GetDefaultClickAction();
-                break;
-            case EConfirmScreenButtonType::Unknown:
-                break;
-        }
-
         UFrontendCommonButtonBase* AddedButton = DynamicEntryBox_Buttons->CreateEntry<UFrontendCommonButtonBase>();
-        AddedButton->SetButtonText(ButtonInfo.ButtonTextToDisplay);
-        AddedButton->SetTriggeringInputAction(ActionRow);
+        AddedButton->SetButtonText(ButtonInfo.TextToDisplay);
         AddedButton->OnClicked().AddLambda(
             [ClickedButtonCallback, ButtonInfo, this]()
             {
-                ClickedButtonCallback(ButtonInfo.ButtonType);
+                ClickedButtonCallback(ButtonInfo.Type);
                 DeactivateWidget();
             });
     }

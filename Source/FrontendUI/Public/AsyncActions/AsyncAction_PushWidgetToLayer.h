@@ -18,10 +18,17 @@ class FRONTENDUI_API UAsyncAction_PushWidgetToLayer : public UBlueprintAsyncActi
     GENERATED_BODY()
 
 public:
-    UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject", HidePin = "WorldContextObject", BlueprintInternalUseOnly = "true" ))
-    static UAsyncAction_PushWidgetToLayer* PushWidgetToLayer(const UObject* WorldContextObject,
+    UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject", HidePin = "WorldContextObject", BlueprintInternalUseOnly = "true", DisplayName="Push Widget To Layer(By Class)" ))
+    static UAsyncAction_PushWidgetToLayer* PushWidgetToLayerByClass(const UObject* WorldContextObject,
         APlayerController* PlayerController,
         TSoftClassPtr<UCommonActivatableWidget> WidgetClass,
+        UPARAM(meta = (Categories = "UI.Layer")) FGameplayTag LayerTag,
+        bool bFocusOnNewlyPushedWidget = true);
+
+    UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject", HidePin = "WorldContextObject", BlueprintInternalUseOnly = "true", DisplayName="Push Widget To Layer(By Tag)" ))
+    static UAsyncAction_PushWidgetToLayer* PushWidgetToLayerByTag(const UObject* WorldContextObject,
+        APlayerController* PlayerController,
+        UPARAM(meta = (Categories = "Frontend.Widget")) FGameplayTag WidgetTag,
         UPARAM(meta = (Categories = "UI.Layer")) FGameplayTag LayerTag,
         bool bFocusOnNewlyPushedWidget = true);
 
