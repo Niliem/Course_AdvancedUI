@@ -34,8 +34,8 @@ public:
     };
     
     static FConfirmScreenInfo CreateOkScreen(const FText& ScreenTitle, const FText& ScreenMessage);
-    static FConfirmScreenInfo CreateYesNoScreen(const FText& ScreenTitle, const FText& ScreenMessage);
     static FConfirmScreenInfo CreateOkCancelScreen(const FText& ScreenTitle, const FText& ScreenMessage);
+    static FConfirmScreenInfo CreateYesNoScreen(const FText& ScreenTitle, const FText& ScreenMessage);    
     static FConfirmScreenInfo CreateYesNoCancelScreen(const FText& ScreenTitle, const FText& ScreenMessage);
     
     void InitConfirmScreen(const FConfirmScreenInfo& ConfirmScreenInfo, TFunction<void (EConfirmScreenButtonType)> ClickedButtonCallback);

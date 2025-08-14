@@ -16,6 +16,7 @@ UENUM(BlueprintType)
 enum class EConfirmScreenButtonType : uint8
 {
     Confirmed,
+    Declined,
     Cancelled,
     Closed,
     Unknown UMETA(Hidden)
