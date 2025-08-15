@@ -33,6 +33,9 @@ private:
     void HandleCancelBoundAction();
     void HandleBackBoundAction();
 
+    UFUNCTION()
+    void OnOptionsTabSelected(FName TabId);
+
     //**** Bound Widgets ****//
     UPROPERTY(meta = (BindWidget))
     UFrontendTabListWidgetBase* TabListWidget_OptionsTabs;

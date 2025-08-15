@@ -19,7 +19,9 @@ void UWidget_OptionsScreen::NativeOnInitialized()
     }
 
     RegisterUIActionBinding(FBindUIActionArgs(ICommonInputModule::GetSettings().GetEnhancedInputBackAction(), true,
-           FSimpleDelegate::CreateUObject(this, &ThisClass::HandleBackBoundAction)));    
+           FSimpleDelegate::CreateUObject(this, &ThisClass::HandleBackBoundAction)));
+
+    TabListWidget_OptionsTabs->OnTabSelected.AddUniqueDynamic(this, &ThisClass::OnOptionsTabSelected);
 }
 
 void UWidget_OptionsScreen::NativeOnActivated()
@@ -58,4 +60,9 @@ void UWidget_OptionsScreen::HandleCancelBoundAction()
 void UWidget_OptionsScreen::HandleBackBoundAction()
 {
     DeactivateWidget();
+}
+
+void UWidget_OptionsScreen::OnOptionsTabSelected(FName TabId)
+{
+    UE_LOG(LogTemp, Warning, TEXT("New Tab Selected. Tab ID: %s"), *TabId.ToString());
 }
