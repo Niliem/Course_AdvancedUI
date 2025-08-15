@@ -4,6 +4,9 @@
 #include "Widgets/Options/Widget_OptionsScreen.h"
 #include "ICommonInputModule.h"
 #include "Input/CommonUIInputTypes.h"
+#include "Widgets/Components/FrontendTabListWidgetBase.h"
+#include "Widgets/Options/OptionsDataRegistry.h"
+#include "Widgets/Options/DataObjects/ListDataObject_Collection.h"
 
 void UWidget_OptionsScreen::NativeOnInitialized()
 {
@@ -17,6 +20,34 @@ void UWidget_OptionsScreen::NativeOnInitialized()
 
     RegisterUIActionBinding(FBindUIActionArgs(ICommonInputModule::GetSettings().GetEnhancedInputBackAction(), true,
            FSimpleDelegate::CreateUObject(this, &ThisClass::HandleBackBoundAction)));    
+}
+
+void UWidget_OptionsScreen::NativeOnActivated()
+{
+    Super::NativeOnActivated();
+
+    for (UListDataObject_Collection* TabCollection : GetOrCreateDataRegistry()->GetRegisteredOptionsTabCollections())
+    {
+        if (!TabCollection)
+            continue;
+
+        const FName TabId = TabCollection->GetDataId();
+        if (TabListWidget_OptionsTabs->GetTabButtonBaseByID(TabId))
+            continue;
+
+        TabListWidget_OptionsTabs->RequestRegisterTab(TabId, TabCollection->GetDataDisplayName());
+    }
+}
+
+UOptionsDataRegistry* UWidget_OptionsScreen::GetOrCreateDataRegistry()
+{
+    if (!OwningDataRegistry)
+    {
+        OwningDataRegistry = NewObject<UOptionsDataRegistry>();
+        OwningDataRegistry->InitOptionsDataRegistry(GetOwningLocalPlayer());
+    }
+    
+    return OwningDataRegistry;
 }
 
 void UWidget_OptionsScreen::HandleCancelBoundAction()

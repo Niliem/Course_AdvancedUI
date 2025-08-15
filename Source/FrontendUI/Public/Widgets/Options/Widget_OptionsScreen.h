@@ -7,6 +7,8 @@
 #include "Widget_OptionsScreen.generated.h"
 
 class UInputAction;
+class UOptionsDataRegistry;
+class UFrontendTabListWidgetBase;
 
 /**
  * 
@@ -20,10 +22,24 @@ protected:
     //~ Begin UUserWidget Interface
     virtual void NativeOnInitialized() override;
     //~ End UUserWidget Interface
+
+    //~ Begin UCommonActivatableWidget Interface
+    virtual void NativeOnActivated() override;
+    //~ End UCommonActivatableWidget Interface
     
 private:
+    UOptionsDataRegistry* GetOrCreateDataRegistry();
+    
     void HandleCancelBoundAction();
     void HandleBackBoundAction();
+
+    //**** Bound Widgets ****//
+    UPROPERTY(meta = (BindWidget))
+    UFrontendTabListWidgetBase* TabListWidget_OptionsTabs;
+    //**** Bound Widgets ****//
+
+    UPROPERTY(Transient)
+    UOptionsDataRegistry* OwningDataRegistry;
     
     UPROPERTY(EditDefaultsOnly, Category = "Frontend Options Screen", meta = (EditCondition = "CommonInput.CommonInputSettings.IsEnhancedInputSupportEnabled", EditConditionHides))
     TObjectPtr<UInputAction> EnhancedInputCancelAction;
