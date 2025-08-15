@@ -8,7 +8,12 @@
 
 void UFrontendTabListWidgetBase::RequestRegisterTab(const FName& InTabId, const FText& InTabDisplayName)
 {
-    
+    RegisterTab(InTabId, TabButtonEntryWidgetClass, nullptr);
+
+    if (UFrontendCommonButtonBase* FoundButton = Cast<UFrontendCommonButtonBase>(GetTabButtonBaseByID(InTabId)))
+    {
+        FoundButton->SetButtonText(InTabDisplayName);
+    }
 }
 
 #if WITH_EDITOR
