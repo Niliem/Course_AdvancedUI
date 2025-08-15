@@ -27,8 +27,14 @@ public:
     
     LIST_DATA_ACCESSOR(UListDataObject_Base*, ParentData);
 
+    void InitDataObject();
+
     //Empty in the base class. Child class ListDataObject_Collection should override it. The function should return all the child data a tab has
     virtual TArray<UListDataObject_Base*> GetAllChildListData() const { return TArray<UListDataObject_Base*>();}
+    virtual bool HasAnyChildListData() const { return false; }
+
+protected:
+    virtual void OnDataObjectInitialized() {};    
 
 private:
     FName DataId;
