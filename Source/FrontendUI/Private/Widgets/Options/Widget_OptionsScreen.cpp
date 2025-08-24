@@ -4,6 +4,7 @@
 #include "Widgets/Options/Widget_OptionsScreen.h"
 #include "ICommonInputModule.h"
 #include "Input/CommonUIInputTypes.h"
+#include "Widgets/Components/FrontendCommonListView.h"
 #include "Widgets/Components/FrontendTabListWidgetBase.h"
 #include "Widgets/Options/OptionsDataRegistry.h"
 #include "Widgets/Options/DataObjects/ListDataObject_Collection.h"
@@ -64,5 +65,12 @@ void UWidget_OptionsScreen::HandleBackBoundAction()
 
 void UWidget_OptionsScreen::OnOptionsTabSelected(FName TabId)
 {
-    UE_LOG(LogTemp, Warning, TEXT("New Tab Selected. Tab ID: %s"), *TabId.ToString());
+    TArray<UListDataObject_Base*> FoundListSourceItems = GetOrCreateDataRegistry()->GetListSourceItemsBySelectedTabId(TabId);
+    CommonListView_OptionsList->SetListItems(FoundListSourceItems);
+
+    if (CommonListView_OptionsList->GetNumItems() != 0)
+    {
+        CommonListView_OptionsList->NavigateToIndex(0);
+        CommonListView_OptionsList->SetSelectedIndex(0);
+    }
 }
