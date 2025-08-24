@@ -19,7 +19,7 @@ class FRONTENDUI_API UWidget_ListEntry_Base : public UCommonUserWidget, public I
     GENERATED_BODY()
 
 public:
-    //~ Begin IUserObjectListEntry Interface    
+    //~ Begin IUserObjectListEntry Interface
     virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
     //~ End IUserObjectListEntry Interface
 

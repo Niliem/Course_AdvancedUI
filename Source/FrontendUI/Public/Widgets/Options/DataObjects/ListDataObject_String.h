@@ -12,10 +12,20 @@
 UCLASS()
 class FRONTENDUI_API UListDataObject_String : public UListDataObject_Value
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
     void AddDynamicOption(const FString& InStringValue, const FText& InDisplayText);
+
+    FORCEINLINE const FText& GetCurrentDisplayText() const
+    {
+        return CurrentDisplayText;
+    }
+
+    FORCEINLINE const TArray<FText>& GetAvailableOptionsTextArray() const
+    {
+        return AvailableOptionsTextArray;
+    }
 
 protected:
     //~ Begin UListDataObject_Base Interface
@@ -23,10 +33,10 @@ protected:
     //~ End UListDataObject_Base Interface
 
     bool TrySetDisplayTextFromStringValue(const FString& InStringValue);
-    
+
     FString CurrentStringValue;
     FText CurrentDisplayText;
-    
+
     TArray<FString> AvailableOptionsStringArray;
     TArray<FText> AvailableOptionsTextArray;
 };
