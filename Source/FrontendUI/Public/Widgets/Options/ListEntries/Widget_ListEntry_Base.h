@@ -8,6 +8,8 @@
 #include "Widget_ListEntry_Base.generated.h"
 
 class UCommonTextBlock;
+class UListDataObject_Base;
+
 /**
  * 
  */
@@ -21,9 +23,11 @@ public:
     virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
     //~ End IUserObjectListEntry Interface
 
+    virtual void OnOwningListDataObjectSet(UListDataObject_Base* ListDataObject);
+
 private:
     //**** Bound Widgets ****//
-    UPROPERTY(BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess= "true"))
+    UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional, AllowPrivateAccess= "true"))
     UCommonTextBlock* CommonText_SettingDisplayName;
     //**** Bound Widgets ****//
 };
