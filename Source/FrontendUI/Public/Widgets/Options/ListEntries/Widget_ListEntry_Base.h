@@ -23,7 +23,7 @@ public:
 
 private:
     //**** Bound Widgets ****//
-    UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional, AllowPrivateAccess= "true"))
+    UPROPERTY(BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess= "true"))
     UCommonTextBlock* CommonText_SettingDisplayName;
     //**** Bound Widgets ****//
 };
