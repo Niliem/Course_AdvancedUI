@@ -8,3 +8,27 @@ void UListDataObject_String::AddDynamicOption(const FString& InStringValue, cons
     AvailableOptionsStringArray.Add(InStringValue);
     AvailableOptionsTextArray.Add(InDisplayText);
 }
+
+void UListDataObject_String::OnDataObjectInitialized()
+{
+    if (!AvailableOptionsStringArray.IsEmpty())
+    {
+        CurrentStringValue = AvailableOptionsStringArray[0];
+    }
+    
+    if (!TrySetDisplayTextFromStringValue(CurrentStringValue))
+    {
+        CurrentDisplayText = FText::FromString(TEXT("Invalid Option"));
+    }
+}
+
+bool UListDataObject_String::TrySetDisplayTextFromStringValue(const FString& InStringValue)
+{
+    const int32 CurrentFoundIndex = AvailableOptionsStringArray.IndexOfByKey(InStringValue);
+    
+    if (!AvailableOptionsTextArray.IsValidIndex(CurrentFoundIndex))
+        return false;
+    
+    CurrentDisplayText = AvailableOptionsTextArray[CurrentFoundIndex];
+    return true;
+}
