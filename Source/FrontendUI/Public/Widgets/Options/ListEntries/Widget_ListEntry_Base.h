@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
 #include "Blueprint/IUserObjectListEntry.h"
+#include "FrontendEnumTypes.h"
 #include "Widget_ListEntry_Base.generated.h"
 
 class UCommonTextBlock;
@@ -24,6 +25,7 @@ public:
     //~ End IUserObjectListEntry Interface
 
     virtual void OnOwningListDataObjectSet(UListDataObject_Base* ListDataObject);
+    virtual void OnOwningListDataObjectModified(UListDataObject_Base* ModifiedData, EOptionsListDataModifyReason ModifyReason);
 
 private:
     //**** Bound Widgets ****//

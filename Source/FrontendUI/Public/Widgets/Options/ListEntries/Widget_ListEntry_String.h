@@ -25,6 +25,7 @@ protected:
     
     //~ Begin UWidget_ListEntry_Base Interface
     virtual void OnOwningListDataObjectSet(UListDataObject_Base* ListDataObject) override;
+    virtual void OnOwningListDataObjectModified(UListDataObject_Base* ModifiedData, EOptionsListDataModifyReason ModifyReason) override;
     //~ End UWidget_ListEntry_Base Interface
     
 private:

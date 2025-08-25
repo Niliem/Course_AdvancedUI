@@ -25,6 +25,12 @@ void UWidget_ListEntry_String::OnOwningListDataObjectSet(UListDataObject_Base* L
     CommonRotator_AvailableOptions->SetSelectedOptionByText(CachedListDataObject->GetCurrentDisplayText());
 }
 
+void UWidget_ListEntry_String::OnOwningListDataObjectModified(UListDataObject_Base* ModifiedData, EOptionsListDataModifyReason ModifyReason)
+{
+    if (CachedListDataObject)
+        CommonRotator_AvailableOptions->SetSelectedOptionByText(CachedListDataObject->GetCurrentDisplayText());
+}
+
 void UWidget_ListEntry_String::OnPreviousOptionButtonClicked()
 {
     if (CachedListDataObject)
