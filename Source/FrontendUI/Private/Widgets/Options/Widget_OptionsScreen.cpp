@@ -8,6 +8,7 @@
 #include "Widgets/Components/FrontendTabListWidgetBase.h"
 #include "Widgets/Options/OptionsDataRegistry.h"
 #include "Widgets/Options/DataObjects/ListDataObject_Collection.h"
+#include "FrontendDebugHelper.h"
 
 void UWidget_OptionsScreen::NativeOnInitialized()
 {
@@ -55,7 +56,7 @@ UOptionsDataRegistry* UWidget_OptionsScreen::GetOrCreateDataRegistry()
 
 void UWidget_OptionsScreen::HandleCancelBoundAction()
 {
-    UE_LOG(LogTemp, Warning, TEXT("UInputAction::HandleCancelBoundAction"));
+    Debug::Print(TEXT("UInputAction::HandleCancelBoundAction"));
 }
 
 void UWidget_OptionsScreen::HandleBackBoundAction()

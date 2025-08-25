@@ -2,8 +2,18 @@
 
 
 #include "Widgets/Options/ListEntries/Widget_ListEntry_String.h"
+#include "Widgets/Components/FrontendCommonButtonBase.h"
 #include "Widgets/Components/FrontendCommonRotator.h"
 #include "Widgets/Options/DataObjects/ListDataObject_String.h"
+#include "FrontendDebugHelper.h"
+
+void UWidget_ListEntry_String::NativeOnInitialized()
+{
+    Super::NativeOnInitialized();
+
+    CommonButton_PreviousOption->OnClicked().AddUObject(this, &UWidget_ListEntry_String::OnPreviousOptionButtonClicked);
+    CommonButton_NextOption->OnClicked().AddUObject(this, &UWidget_ListEntry_String::OnNextOptionButtonClicked);
+}
 
 void UWidget_ListEntry_String::OnOwningListDataObjectSet(UListDataObject_Base* ListDataObject)
 {
@@ -14,3 +24,15 @@ void UWidget_ListEntry_String::OnOwningListDataObjectSet(UListDataObject_Base* L
     CommonRotator_AvailableOptions->PopulateTextLabels(CachedListDataObject->GetAvailableOptionsTextArray());
     CommonRotator_AvailableOptions->SetSelectedOptionByText(CachedListDataObject->GetCurrentDisplayText());
 }
+
+void UWidget_ListEntry_String::OnPreviousOptionButtonClicked()
+{
+    Debug::Print(TEXT("OnPreviousOptionButtonClicked"));
+}
+
+void UWidget_ListEntry_String::OnNextOptionButtonClicked()
+{
+    Debug::Print(TEXT("OnNextOptionButtonClicked"));
+}
+
+
