@@ -27,12 +27,18 @@ void UWidget_ListEntry_String::OnOwningListDataObjectSet(UListDataObject_Base* L
 
 void UWidget_ListEntry_String::OnPreviousOptionButtonClicked()
 {
-    Debug::Print(TEXT("OnPreviousOptionButtonClicked"));
+    if (CachedListDataObject)
+    {
+        CachedListDataObject->BackToPreviousOption();
+    }
 }
 
 void UWidget_ListEntry_String::OnNextOptionButtonClicked()
 {
-    Debug::Print(TEXT("OnNextOptionButtonClicked"));
+    if (CachedListDataObject)
+    {
+        CachedListDataObject->AdvanceToNextOption();
+    }
 }
 
 

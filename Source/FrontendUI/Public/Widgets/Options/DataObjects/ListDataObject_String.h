@@ -16,6 +16,8 @@ class FRONTENDUI_API UListDataObject_String : public UListDataObject_Value
 
 public:
     void AddDynamicOption(const FString& InStringValue, const FText& InDisplayText);
+    void AdvanceToNextOption();
+    void BackToPreviousOption();
 
     FORCEINLINE const FText& GetCurrentDisplayText() const
     {
@@ -33,6 +35,7 @@ protected:
     //~ End UListDataObject_Base Interface
 
     bool TrySetDisplayTextFromStringValue(const FString& InStringValue);
+    bool TrySetDisplayTextFromIndexValue(const int32 InStringIndexValue);
 
     FString CurrentStringValue;
     FText CurrentDisplayText;
@@ -40,3 +43,4 @@ protected:
     TArray<FString> AvailableOptionsStringArray;
     TArray<FText> AvailableOptionsTextArray;
 };
+

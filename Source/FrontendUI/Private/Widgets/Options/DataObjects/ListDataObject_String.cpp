@@ -9,6 +9,30 @@ void UListDataObject_String::AddDynamicOption(const FString& InStringValue, cons
     AvailableOptionsTextArray.Add(InDisplayText);
 }
 
+void UListDataObject_String::AdvanceToNextOption()
+{
+    if (AvailableOptionsStringArray.IsEmpty() || AvailableOptionsTextArray.IsEmpty())
+        return;
+
+    const int32 CurrentStringIndex = AvailableOptionsStringArray.IndexOfByKey(CurrentStringValue);
+    const int32 NextStringIndex = (CurrentStringIndex + 1) % AvailableOptionsStringArray.Num();
+
+    CurrentStringValue = AvailableOptionsStringArray[NextStringIndex];    
+    TrySetDisplayTextFromStringValue(CurrentStringValue);
+}
+
+void UListDataObject_String::BackToPreviousOption()
+{
+    if (AvailableOptionsStringArray.IsEmpty() || AvailableOptionsTextArray.IsEmpty())
+        return;
+
+    const int32 CurrentStringIndex = AvailableOptionsStringArray.IndexOfByKey(CurrentStringValue);
+    const int32 PreviousStringIndex = (CurrentStringIndex - 1 + AvailableOptionsStringArray.Num()) % AvailableOptionsStringArray.Num();
+
+    CurrentStringValue = AvailableOptionsStringArray[PreviousStringIndex];
+    TrySetDisplayTextFromStringValue(CurrentStringValue);
+}
+
 void UListDataObject_String::OnDataObjectInitialized()
 {
     if (!AvailableOptionsStringArray.IsEmpty())
@@ -30,5 +54,14 @@ bool UListDataObject_String::TrySetDisplayTextFromStringValue(const FString& InS
         return false;
     
     CurrentDisplayText = AvailableOptionsTextArray[CurrentFoundIndex];
+    return true;
+}
+
+bool UListDataObject_String::TrySetDisplayTextFromIndexValue(const int32 InStringIndexValue)
+{
+    if (!AvailableOptionsTextArray.IsValidIndex(InStringIndexValue))
+        return false;
+    
+    CurrentDisplayText = AvailableOptionsTextArray[InStringIndexValue];
     return true;
 }
