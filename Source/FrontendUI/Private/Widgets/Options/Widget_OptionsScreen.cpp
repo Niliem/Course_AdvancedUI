@@ -9,6 +9,7 @@
 #include "Widgets/Options/OptionsDataRegistry.h"
 #include "Widgets/Options/DataObjects/ListDataObject_Collection.h"
 #include "FrontendDebugHelper.h"
+#include "Settings/FrontendGameUserSettings.h"
 
 void UWidget_OptionsScreen::NativeOnInitialized()
 {
@@ -41,6 +42,13 @@ void UWidget_OptionsScreen::NativeOnActivated()
 
         TabListWidget_OptionsTabs->RequestRegisterTab(TabId, TabCollection->GetDataDisplayName());
     }
+}
+
+void UWidget_OptionsScreen::NativeOnDeactivated()
+{
+    Super::NativeOnDeactivated();
+
+    UFrontendGameUserSettings::Get()->ApplySettings(true);
 }
 
 UOptionsDataRegistry* UWidget_OptionsScreen::GetOrCreateDataRegistry()

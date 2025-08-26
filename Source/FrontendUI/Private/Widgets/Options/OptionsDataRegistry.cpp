@@ -50,6 +50,8 @@ void UOptionsDataRegistry::InitGameplayCollectionTab()
         GameDifficulty->AddDynamicOption(TEXT("Hard"), FText::FromString(TEXT("Hard")));
         GameDifficulty->SetDataDynamicGetter(MAKE_OPTIONS_DATA_CONTROL(GetGameDifficulty));
         GameDifficulty->SetDataDynamicSetter(MAKE_OPTIONS_DATA_CONTROL(SetGameDifficulty));
+        GameDifficulty->SetShouldApplyChangesImmediately(true);
+        
         GameplayTabCollection->AddChildListData(GameDifficulty);
     }
 
