@@ -34,6 +34,8 @@ protected:
     virtual void OnDataObjectInitialized() override;
     //~ End UListDataObject_Base Interface
 
+    void TrySetOptionValueFromIndexValue(const int32 InOptionIndex);
+    
     bool TrySetDisplayTextFromStringValue(const FString& InStringValue);
     bool TrySetDisplayTextFromIndexValue(const int32 InStringIndexValue);
 

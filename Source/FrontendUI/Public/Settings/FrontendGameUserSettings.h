@@ -17,6 +17,15 @@ class FRONTENDUI_API UFrontendGameUserSettings : public UGameUserSettings
 public:
     static UFrontendGameUserSettings* Get();
 
+    //***** Gameplay Collection Tab *****//
+    UFUNCTION()
+    FString GetGameDifficulty() const { return GameDifficulty; }
+
+    UFUNCTION()
+    void SetGameDifficulty(const FString& InNewGameDifficulty) { GameDifficulty = InNewGameDifficulty; }
+    
+    //***** Gameplay Collection Tab *****//
+
 private:
     UPROPERTY(Config)
     FString GameDifficulty;
