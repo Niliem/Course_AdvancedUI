@@ -42,7 +42,6 @@ void UListDataObject_String::AdvanceToNextOption()
     const int32 NextStringIndex = (CurrentStringIndex + 1) % AvailableOptionsStringArray.Num();
 
     TrySetOptionValueFromIndexValue(NextStringIndex);
-    TrySetDisplayTextFromIndexValue(NextStringIndex);
 }
 
 void UListDataObject_String::BackToPreviousOption()
@@ -54,12 +53,12 @@ void UListDataObject_String::BackToPreviousOption()
     const int32 PreviousStringIndex = (CurrentStringIndex - 1 + AvailableOptionsStringArray.Num()) % AvailableOptionsStringArray.Num();
 
     TrySetOptionValueFromIndexValue(PreviousStringIndex);
-    TrySetDisplayTextFromIndexValue(PreviousStringIndex);
 }
 
 void UListDataObject_String::TrySetOptionValueFromIndexValue(const int32 InOptionIndex)
 {
     CurrentStringValue = AvailableOptionsStringArray[InOptionIndex];
+    TrySetDisplayTextFromIndexValue(InOptionIndex);
     
     if (DataDynamicSetter)
     {
