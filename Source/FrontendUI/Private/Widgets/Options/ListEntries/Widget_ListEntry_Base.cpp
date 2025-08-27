@@ -42,5 +42,5 @@ void UWidget_ListEntry_Base::SelectThisEntryWidget()
     if (!ListView)
         return;
 
-    ListView->SetSelectedItem(this);
+    ListView->SetSelectedItem(GetListItem());
 }

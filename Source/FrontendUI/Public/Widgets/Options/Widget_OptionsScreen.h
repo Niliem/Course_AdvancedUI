@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "CommonActivatableWidget.h"
+#include "FrontendEnumTypes.h"
 #include "Widget_OptionsScreen.generated.h"
 
+class UListDataObject_Base;
 class UWidget_OptionsDetailsView;
 class UInputAction;
 class UOptionsDataRegistry;
@@ -33,7 +35,7 @@ protected:
 private:
     UOptionsDataRegistry* GetOrCreateDataRegistry();
     
-    void HandleCancelBoundAction();
+    void HandleResetBoundAction();
     void HandleBackBoundAction();
 
     UFUNCTION()
@@ -43,6 +45,8 @@ private:
     void OnListViewItemSelected(UObject* InSelectedItem);
 
     FString TryGetEntryWidgetClassName(UObject* InOwningListItem) const;
+    
+    void OnListViewListDataModified(UListDataObject_Base* ModifiedData, EOptionsListDataModifyReason ModifyReason);
 
     //***** Bound Widgets *****//
     UPROPERTY(meta = (BindWidget))
@@ -59,8 +63,11 @@ private:
     UOptionsDataRegistry* OwningDataRegistry;
     
     UPROPERTY(EditDefaultsOnly, Category = "Frontend Options Screen", meta = (EditCondition = "CommonInput.CommonInputSettings.IsEnhancedInputSupportEnabled", EditConditionHides))
-    TObjectPtr<UInputAction> EnhancedInputCancelAction;
+    TObjectPtr<UInputAction> EnhancedInputResetAction;
 
-    FUIActionBindingHandle CancelActionHandle;
+    FUIActionBindingHandle ResetActionHandle;
+
+    UPROPERTY(Transient)
+    TArray<UListDataObject_Base*> ResettableDataArray; 
 };
 
