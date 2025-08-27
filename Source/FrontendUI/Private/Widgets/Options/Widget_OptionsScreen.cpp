@@ -79,6 +79,8 @@ void UWidget_OptionsScreen::HandleBackBoundAction()
 
 void UWidget_OptionsScreen::OnOptionsTabSelected(FName TabId)
 {
+    DetailsView_ListEntryInfo->ClearDetailsViewInfo();
+    
     TArray<UListDataObject_Base*> FoundListSourceItems = GetOrCreateDataRegistry()->GetListSourceItemsBySelectedTabId(TabId);
     CommonListView_OptionsList->SetListItems(FoundListSourceItems);
 

@@ -36,6 +36,11 @@ public:
     virtual TArray<UListDataObject_Base*> GetAllChildListData() const { return TArray<UListDataObject_Base*>();}
     virtual bool HasAnyChildListData() const { return false; }
 
+    //The child class should override them to provide implementations for resetting the data
+    virtual bool HasDefaultValue() const { return false; }
+    virtual bool CanResetBackToDefaultValue() const { return false; }
+    virtual bool TryResetBackToDefaultValue() const { return false; }
+
     void SetShouldApplyChangesImmediately(bool bShouldApplyImmediately) { bShouldApplyChangesImmediately = bShouldApplyImmediately; }
 
 protected:

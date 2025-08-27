@@ -20,7 +20,18 @@ public:
     void SetDataDynamicGetter(const TSharedPtr<FOptionsDataInteractionHelper>& InDataDynamicGetter);
     void SetDataDynamicSetter(const TSharedPtr<FOptionsDataInteractionHelper>& InDataDynamicSetter);
 
+    void SetDefaultValueFromString(const FString& InDefaultStringValue) { DefaultStringValue = InDefaultStringValue; }
+
+    //~ Begin UListDataObject_Base Interface
+    virtual bool HasDefaultValue() const override { return DefaultStringValue.IsSet(); }
+    //~ End UListDataObject_Base Interface
+
 protected:
+    FString GetDefaultValueAsString() const { return DefaultStringValue.GetValue(); }
+    
     TSharedPtr<FOptionsDataInteractionHelper> DataDynamicGetter;
     TSharedPtr<FOptionsDataInteractionHelper> DataDynamicSetter;
+
+private:
+    TOptional<FString> DefaultStringValue;
 };
