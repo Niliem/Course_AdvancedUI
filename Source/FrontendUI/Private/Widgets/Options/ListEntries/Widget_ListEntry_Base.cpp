@@ -3,6 +3,7 @@
 
 #include "Widgets/Options/ListEntries/Widget_ListEntry_Base.h"
 #include "CommonTextBlock.h"
+#include "Components/ListView.h"
 #include "Widgets/Options/DataObjects/ListDataObject_Base.h"
 
 void UWidget_ListEntry_Base::NativeOnListEntryWidgetHovered(bool bWasHovered)
@@ -33,4 +34,13 @@ void UWidget_ListEntry_Base::OnOwningListDataObjectSet(UListDataObject_Base* Lis
 
 void UWidget_ListEntry_Base::OnOwningListDataObjectModified(UListDataObject_Base* ModifiedData, EOptionsListDataModifyReason ModifyReason)
 {
+}
+
+void UWidget_ListEntry_Base::SelectThisEntryWidget()
+{
+    UListView* ListView = Cast<UListView>(GetOwningListView());
+    if (!ListView)
+        return;
+
+    ListView->SetSelectedItem(this);
 }
