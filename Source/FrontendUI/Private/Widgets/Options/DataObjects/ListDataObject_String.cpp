@@ -33,6 +33,24 @@ void UListDataObject_String::OnDataObjectInitialized()
     }
 }
 
+bool UListDataObject_String::CanResetBackToDefaultValue() const
+{
+    return HasDefaultValue() && CurrentStringValue != GetDefaultValueAsString();
+}
+
+bool UListDataObject_String::TryResetBackToDefaultValue()
+{
+    if (!CanResetBackToDefaultValue())
+        return false;
+
+    CurrentStringValue = GetDefaultValueAsString();
+
+    bool bResult = true;
+    bResult &= TrySetDisplayTextFromStringValue(CurrentStringValue);
+    bResult &= TrySetOptionValueFromStringValue(CurrentStringValue, EOptionsListDataModifyReason::ResetToDefault);
+    return bResult;
+}
+
 void UListDataObject_String::AdvanceToNextOption()
 {
     if (AvailableOptionsStringArray.IsEmpty() || AvailableOptionsTextArray.IsEmpty())
@@ -41,7 +59,8 @@ void UListDataObject_String::AdvanceToNextOption()
     const int32 CurrentStringIndex = AvailableOptionsStringArray.IndexOfByKey(CurrentStringValue);
     const int32 NextStringIndex = (CurrentStringIndex + 1) % AvailableOptionsStringArray.Num();
 
-    TrySetOptionValueFromIndexValue(NextStringIndex);
+    TrySetDisplayTextFromIndexValue(NextStringIndex);
+    TrySetOptionValueFromIndexValue(NextStringIndex, EOptionsListDataModifyReason::DirectlyModified);
 }
 
 void UListDataObject_String::BackToPreviousOption()
@@ -52,30 +71,37 @@ void UListDataObject_String::BackToPreviousOption()
     const int32 CurrentStringIndex = AvailableOptionsStringArray.IndexOfByKey(CurrentStringValue);
     const int32 PreviousStringIndex = (CurrentStringIndex - 1 + AvailableOptionsStringArray.Num()) % AvailableOptionsStringArray.Num();
 
-    TrySetOptionValueFromIndexValue(PreviousStringIndex);
+    TrySetDisplayTextFromIndexValue(PreviousStringIndex);
+    TrySetOptionValueFromIndexValue(PreviousStringIndex, EOptionsListDataModifyReason::DirectlyModified);
 }
 
-void UListDataObject_String::TrySetOptionValueFromIndexValue(const int32 InOptionIndex)
+bool UListDataObject_String::TrySetOptionValueFromStringValue(const FString& InStringValue, EOptionsListDataModifyReason ModifyReason)
 {
+    const int32 CurrentFoundIndex = AvailableOptionsStringArray.IndexOfByKey(InStringValue);
+
+    return TrySetOptionValueFromIndexValue(CurrentFoundIndex, ModifyReason);
+}
+
+bool UListDataObject_String::TrySetOptionValueFromIndexValue(const int32 InOptionIndex, EOptionsListDataModifyReason ModifyReason)
+{
+    if (!AvailableOptionsStringArray.IsValidIndex(InOptionIndex))
+        return false;
+    
     CurrentStringValue = AvailableOptionsStringArray[InOptionIndex];
-    TrySetDisplayTextFromIndexValue(InOptionIndex);
     
     if (DataDynamicSetter)
     {
         DataDynamicSetter->SetValueFromString(CurrentStringValue);
-        NotifyListDataModified(this);
+        NotifyListDataModified(this, ModifyReason);
     }
+    return true;
 }
 
 bool UListDataObject_String::TrySetDisplayTextFromStringValue(const FString& InStringValue)
 {
     const int32 CurrentFoundIndex = AvailableOptionsStringArray.IndexOfByKey(InStringValue);
     
-    if (!AvailableOptionsTextArray.IsValidIndex(CurrentFoundIndex))
-        return false;
-    
-    CurrentDisplayText = AvailableOptionsTextArray[CurrentFoundIndex];
-    return true;
+    return TrySetDisplayTextFromIndexValue(CurrentFoundIndex);
 }
 
 bool UListDataObject_String::TrySetDisplayTextFromIndexValue(const int32 InStringIndexValue)

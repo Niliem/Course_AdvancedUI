@@ -32,9 +32,12 @@ public:
 protected:
     //~ Begin UListDataObject_Base Interface
     virtual void OnDataObjectInitialized() override;
+    virtual bool CanResetBackToDefaultValue() const override;
+    virtual bool TryResetBackToDefaultValue() override;
     //~ End UListDataObject_Base Interface
 
-    void TrySetOptionValueFromIndexValue(const int32 InOptionIndex);
+    bool TrySetOptionValueFromStringValue(const FString& InStringValue, EOptionsListDataModifyReason ModifyReason);
+    bool TrySetOptionValueFromIndexValue(const int32 InOptionIndex, EOptionsListDataModifyReason ModifyReason);
     
     bool TrySetDisplayTextFromStringValue(const FString& InStringValue);
     bool TrySetDisplayTextFromIndexValue(const int32 InStringIndexValue);
