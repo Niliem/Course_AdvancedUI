@@ -68,6 +68,8 @@ private:
     FUIActionBindingHandle ResetActionHandle;
 
     UPROPERTY(Transient)
-    TArray<UListDataObject_Base*> ResettableDataArray; 
+    TArray<UListDataObject_Base*> ResettableDataArray;
+
+    bool bIsResettingData = false;
 };
 

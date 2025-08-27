@@ -90,11 +90,39 @@ void UWidget_OptionsScreen::HandleResetBoundAction()
         EConfirmScreenType::YesNo,
         FText::FromString(TEXT("Reset")),
         FText::FromString(TEXT("Are you sure you want to reset all the setting under the ") + CastedSelectedTab->GetButtonText().ToString() + TEXT(" tab?")),
-        [](EConfirmScreenButtonType ClickedButtonType)
+        [this](EConfirmScreenButtonType ClickedButtonType)
+        {
+            if (ClickedButtonType != EConfirmScreenButtonType::Confirmed)
+                return;
+
+            bIsResettingData = true;
+            
+            bool bHasDataFailedToReset = false;
+            
+            for (UListDataObject_Base* ResettableData : ResettableDataArray)
             {
-                
+                if (!ResettableData)
+                    continue;
+
+                if (ResettableData->TryResetBackToDefaultValue())
+                {
+                    Debug::Print(ResettableData->GetDataDisplayName().ToString() + TEXT(" was reset"));
+                }
+                else
+                {
+                    bHasDataFailedToReset = true;
+                    Debug::Print(ResettableData->GetDataDisplayName().ToString() + TEXT(" failed to reset"));
+                }
             }
-        );
+
+            if (!bHasDataFailedToReset)
+            {
+                ResettableDataArray.Empty();
+                RemoveActionBinding(ResetActionHandle);
+            }
+
+            bIsResettingData = false;
+        });
 }
 
 void UWidget_OptionsScreen::HandleBackBoundAction()
@@ -192,7 +220,7 @@ FString UWidget_OptionsScreen::TryGetEntryWidgetClassName(UObject* InOwningListI
 
 void UWidget_OptionsScreen::OnListViewListDataModified(UListDataObject_Base* ModifiedData, EOptionsListDataModifyReason ModifyReason)
 {
-    if (!ModifiedData)
+    if (!ModifiedData || bIsResettingData)
         return;
 
     if (ModifiedData->CanResetBackToDefaultValue())
