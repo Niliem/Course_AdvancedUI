@@ -10,6 +10,7 @@
 #include "Widgets/Options/DataObjects/ListDataObject_Collection.h"
 #include "FrontendDebugHelper.h"
 #include "Settings/FrontendGameUserSettings.h"
+#include "Widgets/Options/ListEntries/Widget_ListEntry_Base.h"
 
 void UWidget_OptionsScreen::NativeOnInitialized()
 {
@@ -92,28 +93,16 @@ void UWidget_OptionsScreen::OnListViewItemHovered(UObject* InHoveredItem, bool b
     if (!InHoveredItem)
         return;
 
-    auto ListDataObject = Cast<UListDataObject_Base>(InHoveredItem);
-    if (!ListDataObject)
+    UWidget_ListEntry_Base* HoveredEntryWidget = CommonListView_OptionsList->GetEntryWidgetFromItem<UWidget_ListEntry_Base>(InHoveredItem);
+    if (!HoveredEntryWidget)
         return;
 
-    const FString DebugMessage = ListDataObject->GetDataDisplayName().ToString()
-    + TEXT(" was ")
-    + (bWasHovered ? TEXT(" hovered!") : TEXT("unhovered!"));
-    
-    Debug::Print(DebugMessage);
+    HoveredEntryWidget->NativeOnListEntryWidgetHovered(bWasHovered);
 }
 
 void UWidget_OptionsScreen::OnListViewItemSelected(UObject* InSelectedItem)
 {
     if (!InSelectedItem)
         return;
-
-    auto ListDataObject = Cast<UListDataObject_Base>(InSelectedItem);
-    if (!ListDataObject)
-        return;
-
-    const FString DebugMessage = ListDataObject->GetDataDisplayName().ToString()
-    + TEXT(" was selected");
     
-    Debug::Print(DebugMessage);
 }
