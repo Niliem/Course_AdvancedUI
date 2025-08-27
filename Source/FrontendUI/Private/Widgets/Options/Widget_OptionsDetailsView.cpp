@@ -24,7 +24,7 @@ void UWidget_OptionsDetailsView::UpdateDetailsViewInfo(UListDataObject_Base* InD
     
     CommonTextBlock_Title->SetText(InDataObject->GetDataDisplayName());
 
-    if (InDataObject->GetSoftDescriptionImage().IsNull())
+    if (!InDataObject->GetSoftDescriptionImage().IsNull())
     {
         CommonLazyImage_DescriptionImage->SetBrushFromLazyTexture(InDataObject->GetSoftDescriptionImage());
         CommonLazyImage_DescriptionImage->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
