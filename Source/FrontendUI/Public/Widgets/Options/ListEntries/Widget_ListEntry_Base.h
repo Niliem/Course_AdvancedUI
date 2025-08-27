@@ -35,8 +35,8 @@ protected:
     void SelectThisEntryWidget();
 
 private:
-    //**** Bound Widgets ****//
+    //***** Bound Widgets *****//
     UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional, AllowPrivateAccess= "true"))
     UCommonTextBlock* CommonText_SettingDisplayName;
-    //**** Bound Widgets ****//
+    //***** Bound Widgets *****//
 };

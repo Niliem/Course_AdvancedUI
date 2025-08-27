@@ -41,13 +41,13 @@ private:
     void OnListViewItemHovered(UObject* InHoveredItem, bool bWasHovered);
     void OnListViewItemSelected(UObject* InSelectedItem);
 
-    //**** Bound Widgets ****//
+    //***** Bound Widgets *****//
     UPROPERTY(meta = (BindWidget))
     UFrontendTabListWidgetBase* TabListWidget_OptionsTabs;
 
     UPROPERTY(meta = (BindWidget))
     UFrontendCommonListView* CommonListView_OptionsList;
-    //**** Bound Widgets ****//
+    //***** Bound Widgets *****//
 
     UPROPERTY(Transient)
     UOptionsDataRegistry* OwningDataRegistry;

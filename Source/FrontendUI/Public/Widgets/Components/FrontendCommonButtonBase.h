@@ -31,10 +31,10 @@ private:
     virtual void NativeOnUnhovered() override;
     //~ End UCommonButtonBase Interface
     
-    //**** Bound Widgets ****//
+    //***** Bound Widgets *****//
     UPROPERTY(meta = (BindWidgetOptional))
     UCommonTextBlock* CommonTextBlock_ButtonText;
-    //**** Bound Widgets ****//
+    //***** Bound Widgets *****//
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Frontend Button", meta = (AllowPrivateAccess = "true"))
     FText ButtonDisplayText;

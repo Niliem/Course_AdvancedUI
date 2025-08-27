@@ -32,7 +32,7 @@ private:
     void OnPreviousOptionButtonClicked();
     void OnNextOptionButtonClicked();
     
-    //**** Bound Widgets ****//
+    //***** Bound Widgets *****//
     UPROPERTY(BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess= "true"))
     UFrontendCommonButtonBase* CommonButton_PreviousOption;
 
@@ -41,7 +41,7 @@ private:
 
     UPROPERTY(BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess= "true"))
     UFrontendCommonButtonBase* CommonButton_NextOption;
-    //**** Bound Widgets ****//
+    //***** Bound Widgets *****//
 
     UPROPERTY(Transient)
     UListDataObject_String* CachedListDataObject;
