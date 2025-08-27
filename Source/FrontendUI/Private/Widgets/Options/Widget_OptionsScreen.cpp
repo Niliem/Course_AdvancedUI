@@ -10,6 +10,8 @@
 #include "Widgets/Options/DataObjects/ListDataObject_Collection.h"
 #include "FrontendDebugHelper.h"
 #include "Settings/FrontendGameUserSettings.h"
+#include "Subsystems/FrontendUISubsystem.h"
+#include "Widgets/Components/FrontendCommonButtonBase.h"
 #include "Widgets/Options/Widget_OptionsDetailsView.h"
 #include "Widgets/Options/ListEntries/Widget_ListEntry_Base.h"
 
@@ -69,7 +71,30 @@ UOptionsDataRegistry* UWidget_OptionsScreen::GetOrCreateDataRegistry()
 
 void UWidget_OptionsScreen::HandleResetBoundAction()
 {
-    Debug::Print(TEXT("UInputAction::HandleResetBoundAction"));
+    if (ResettableDataArray.IsEmpty())
+        return;
+
+    UFrontendUISubsystem* FrontendUISubsystem = UFrontendUISubsystem::Get(this);
+    if (!FrontendUISubsystem)
+        return;
+    
+    UCommonButtonBase* SelectedTab = TabListWidget_OptionsTabs->GetTabButtonBaseByID(TabListWidget_OptionsTabs->GetActiveTab());
+    if (!SelectedTab)
+        return;
+
+    UFrontendCommonButtonBase* CastedSelectedTab = Cast<UFrontendCommonButtonBase>(SelectedTab);        
+    if (!CastedSelectedTab)
+        return;
+            
+    FrontendUISubsystem->PushConfirmScreenAsync(
+        EConfirmScreenType::YesNo,
+        FText::FromString(TEXT("Reset")),
+        FText::FromString(TEXT("Are you sure you want to reset all the setting under the ") + CastedSelectedTab->GetButtonText().ToString() + TEXT(" tab?")),
+        [](EConfirmScreenButtonType ClickedButtonType)
+            {
+                
+            }
+        );
 }
 
 void UWidget_OptionsScreen::HandleBackBoundAction()

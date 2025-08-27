@@ -19,6 +19,9 @@ class FRONTENDUI_API UFrontendCommonButtonBase : public UCommonButtonBase
 public:
     UFUNCTION(BlueprintCallable, Category = "Frontend Button")
     void SetButtonText(FText Text);
+
+    UFUNCTION(BlueprintCallable, Category = "Frontend Button")
+    FText GetButtonText() const;
     
 private:
     //~ Begin UUserWidget Interface
