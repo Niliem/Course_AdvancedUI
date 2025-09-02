@@ -80,6 +80,12 @@ void UListDataObject_String::BackToPreviousOption()
     TrySetOptionValueFromIndexValue(PreviousStringIndex, EOptionsListDataModifyReason::DirectlyModified);
 }
 
+void UListDataObject_String::SelectOptionByIndex(int32 Index)
+{
+    TrySetDisplayTextFromIndexValue(Index);
+    TrySetOptionValueFromIndexValue(Index, EOptionsListDataModifyReason::DirectlyModified);
+}
+
 bool UListDataObject_String::TrySetOptionValueFromStringValue(const FString& InStringValue, EOptionsListDataModifyReason ModifyReason)
 {
     const int32 CurrentFoundIndex = AvailableOptionsStringArray.IndexOfByKey(InStringValue);

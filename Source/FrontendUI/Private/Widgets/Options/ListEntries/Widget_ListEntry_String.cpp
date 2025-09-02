@@ -18,6 +18,8 @@ void UWidget_ListEntry_String::NativeOnInitialized()
     {
         SelectThisEntryWidget();
     });
+
+    CommonRotator_AvailableOptions->OnRotatedEvent.AddUObject(this, &UWidget_ListEntry_String::OnRotatorValueChanged);
 }
 
 void UWidget_ListEntry_String::OnOwningListDataObjectSet(UListDataObject_Base* ListDataObject)
@@ -52,6 +54,14 @@ void UWidget_ListEntry_String::OnNextOptionButtonClicked()
         CachedListDataObject->AdvanceToNextOption();
     }
     SelectThisEntryWidget();
+}
+
+void UWidget_ListEntry_String::OnRotatorValueChanged(int32 Value, bool bUserInitiated)
+{
+    if (!CachedListDataObject || !bUserInitiated)
+        return;
+    
+    CachedListDataObject->SelectOptionByIndex(Value);
 }
 
 

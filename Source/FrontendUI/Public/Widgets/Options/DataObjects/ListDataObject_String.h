@@ -18,6 +18,7 @@ public:
     void AddDynamicOption(const FString& InStringValue, const FText& InDisplayText);
     void AdvanceToNextOption();
     void BackToPreviousOption();
+    void SelectOptionByIndex(int32 Index);
 
     FORCEINLINE const FText& GetCurrentDisplayText() const
     {
