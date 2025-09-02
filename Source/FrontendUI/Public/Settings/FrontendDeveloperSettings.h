@@ -8,6 +8,7 @@
 #include "Widgets/Widget_PrimaryLayout.h"
 #include "FrontendDeveloperSettings.generated.h"
 
+class UTexture2D;
 class UCommonActivatableWidget;
 
 /**
@@ -24,4 +25,7 @@ public:
 
     UPROPERTY(Config, EditAnywhere, Category = "Widget Reference", meta = (ForceInlineRow, Categories = "Frontend.Widget"))
     TSubclassOf<UWidget_PrimaryLayout> PrimaryLayoutClass;
+
+    UPROPERTY(Config, EditAnywhere, Category = "Options Image Refference", meta = (ForceInlineRow, Categories = "Options.Image"))
+    TMap<FGameplayTag, TSoftObjectPtr<UTexture2D>> OptionsScreenSoftImageMap;
 };

@@ -18,3 +18,8 @@ namespace FrontendGameplayTags
     UE_DEFINE_GAMEPLAY_TAG(Frontend_Widget_Options, "Frontend.Widget.Options");
     UE_DEFINE_GAMEPLAY_TAG(Frontend_Widget_Confirm, "Frontend.Widget.Confirm");
 }; //FrontendGameplayTags
+
+namespace OptionsImageGameplayTags
+{
+    UE_DEFINE_GAMEPLAY_TAG(Options_Image_Gameplay_TestImage, "Options.Image.Gameplay.TestImage");
+}; //OptionsImageGameplayTags

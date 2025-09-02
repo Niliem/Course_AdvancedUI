@@ -19,3 +19,8 @@ namespace FrontendGameplayTags
     FRONTENDUI_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Frontend_Widget_Options);
     FRONTENDUI_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Frontend_Widget_Confirm);
 }; //FrontendGameplayTags
+
+namespace OptionsImageGameplayTags
+{
+    FRONTENDUI_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Options_Image_Gameplay_TestImage);
+}; //OptionsImageGameplayTags
