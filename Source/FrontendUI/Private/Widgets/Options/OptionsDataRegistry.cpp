@@ -32,8 +32,30 @@ TArray<UListDataObject_Base*> UOptionsDataRegistry::GetListSourceItemsBySelected
     checkf(FoundTabCollectionPointer,TEXT("No valid tab found under the ID %s"),*InSelectedTabId.ToString());
 
     UListDataObject_Collection* FoundTabCollection = *FoundTabCollectionPointer;
+
+    TArray<UListDataObject_Base*> AllChildListItems;
+    FindAllChildListItems(FoundTabCollection, AllChildListItems);
     
-    return FoundTabCollection->GetAllChildListData();
+    return AllChildListItems;
+}
+
+void UOptionsDataRegistry::FindAllChildListItems(const UListDataObject_Base* InParent, TArray<UListDataObject_Base*>& OutFoundChildren) const
+{
+    if (!InParent)
+        return;
+    
+    for (const auto Child : InParent->GetAllChildListData())
+    {
+        if (!Child)
+            continue;
+    
+        OutFoundChildren.Add(Child);
+    
+        if (Child->HasAnyChildListData())
+        {
+            FindAllChildListItems(Child, OutFoundChildren);
+        }
+    }
 }
 
 void UOptionsDataRegistry::InitGameplayCollectionTab()
@@ -85,6 +107,14 @@ void UOptionsDataRegistry::InitAudioCollectionTab()
         VolumeCategoryCollection->SetDataId(FName("VolumeCategoryCollection"));
         VolumeCategoryCollection->SetDataDisplayName(FText::FromString(TEXT("Volume")));
         AudioTabCollection->AddChildListData(VolumeCategoryCollection);
+
+        // Test 
+        {
+            UListDataObject_String* TestVolumeItem = NewObject<UListDataObject_String>();
+            TestVolumeItem->SetDataId(FName("TestVolumeItem"));
+            TestVolumeItem->SetDataDisplayName(FText::FromString(TEXT("Test Volume Item")));
+            VolumeCategoryCollection->AddChildListData(TestVolumeItem);
+        }
     }
     
     RegisteredOptionsTabCollections.Add(AudioTabCollection);
@@ -107,3 +137,4 @@ void UOptionsDataRegistry::InitControlCollectionTab()
     
     RegisteredOptionsTabCollections.Add(ControlTabCollection);
 }
+

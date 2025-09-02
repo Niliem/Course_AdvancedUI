@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
 #include "OptionsDataRegistry.generated.h"
 
 class UListDataObject_Base;
@@ -30,6 +29,8 @@ private:
     void InitAudioCollectionTab();
     void InitVideoCollectionTab();
     void InitControlCollectionTab();
+
+    void FindAllChildListItems(const UListDataObject_Base* InParent, TArray<UListDataObject_Base*>& OutFoundChildren) const;
 
     UPROPERTY(Transient)
     TArray<UListDataObject_Collection*> RegisteredOptionsTabCollections;
