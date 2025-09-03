@@ -31,6 +31,17 @@ float UListDataObject_Scalar::GetCurrentValue() const
     return 0.0f;
 }
 
+void UListDataObject_Scalar::SetCurrentValue(float Value)
+{
+    if (DataDynamicSetter)
+    {
+        const float ClampedValue = FMath::GetMappedRangeValueClamped(DisplayValueRange, OutputValueRange, Value);
+        DataDynamicSetter->SetValueFromString(LexToString(ClampedValue));
+
+        NotifyListDataModified(this, EOptionsListDataModifyReason::DirectlyModified);
+    }
+}
+
 float UListDataObject_Scalar::StringToFloat(const FString& InString) const
 {
     float Result = 0.0f;
