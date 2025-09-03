@@ -3,6 +3,11 @@
 
 #include "Settings/FrontendGameUserSettings.h"
 
+UFrontendGameUserSettings::UFrontendGameUserSettings()
+    : OverallVolume(1.0f)
+{
+}
+
 UFrontendGameUserSettings* UFrontendGameUserSettings::Get()
 {
     if(!GEngine)
