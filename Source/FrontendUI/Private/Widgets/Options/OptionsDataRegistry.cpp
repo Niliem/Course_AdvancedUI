@@ -90,6 +90,7 @@ void UOptionsDataRegistry::InitGameplayCollectionTab()
         TestItem->SetDataDisplayName(FText::FromString(TEXT("Test Image Item")));
         TestItem->SetSoftDescriptionImage(UFrontendFunctionLibrary::GetOptionsSoftImageByTag(OptionsImageGameplayTags::Options_Image_Gameplay_TestImage));
         TestItem->SetDescriptionRichText(FText::FromString(TEXT("The image to display can be specified in the project settings. It can be anything the developer assigned in there")));
+
         GameplayTabCollection->AddChildListData(TestItem);
     }
     
@@ -107,6 +108,7 @@ void UOptionsDataRegistry::InitAudioCollectionTab()
         UListDataObject_Collection* VolumeCategoryCollection = NewObject<UListDataObject_Collection>();
         VolumeCategoryCollection->SetDataId(FName("VolumeCategoryCollection"));
         VolumeCategoryCollection->SetDataDisplayName(FText::FromString(TEXT("Volume")));
+        
         AudioTabCollection->AddChildListData(VolumeCategoryCollection);
 
         // Overall Volume 
@@ -123,9 +125,18 @@ void UOptionsDataRegistry::InitAudioCollectionTab()
             OverallVolume->SetNumberFormattingOptions(UListDataObject_Scalar::NoDecimal());
             OverallVolume->SetDataDynamicGetter(MAKE_OPTIONS_DATA_CONTROL(GetOverallVolume));
             OverallVolume->SetDataDynamicSetter(MAKE_OPTIONS_DATA_CONTROL(SetOverallVolume));
-            OverallVolume->SetShouldApplyChangesImmediately(true);
+            //OverallVolume->SetShouldApplyChangesImmediately(true);
             
             VolumeCategoryCollection->AddChildListData(OverallVolume);
+        }
+
+        // Test Item
+        {
+            UListDataObject_String* TestItem = NewObject<UListDataObject_String>();
+            TestItem->SetDataId(FName("TestItem"));
+            TestItem->SetDataDisplayName(FText::FromString(TEXT("Test Item")));
+            
+            VolumeCategoryCollection->AddChildListData(TestItem);
         }
     }
     
