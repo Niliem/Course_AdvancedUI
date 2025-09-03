@@ -33,7 +33,7 @@ public:
     float GetOverallVolume() const { return OverallVolume; }
 
     UFUNCTION()
-    void SetOverallVolume(float InNewOverallVolume) { OverallVolume = InNewOverallVolume; }      
+    void SetOverallVolume(float InNewOverallVolume);
     //***** Audio Collection Tab *****//
 
 private:
