@@ -111,7 +111,7 @@ void UOptionsDataRegistry::InitAudioCollectionTab()
         
         AudioTabCollection->AddChildListData(VolumeCategoryCollection);
 
-        // Overall Volume 
+        // Overall Volume
         {
             UListDataObject_Scalar* OverallVolume = NewObject<UListDataObject_Scalar>();
             OverallVolume->SetDataId(FName("OverallVolume"));
@@ -125,9 +125,28 @@ void UOptionsDataRegistry::InitAudioCollectionTab()
             OverallVolume->SetNumberFormattingOptions(UListDataObject_Scalar::NoDecimal());
             OverallVolume->SetDataDynamicGetter(MAKE_OPTIONS_DATA_CONTROL(GetOverallVolume));
             OverallVolume->SetDataDynamicSetter(MAKE_OPTIONS_DATA_CONTROL(SetOverallVolume));
-            //OverallVolume->SetShouldApplyChangesImmediately(true);
+            OverallVolume->SetShouldApplyChangesImmediately(true);
             
             VolumeCategoryCollection->AddChildListData(OverallVolume);
+        }
+
+        // Music Volume
+        {
+            UListDataObject_Scalar* MusicVolume = NewObject<UListDataObject_Scalar>();
+            MusicVolume->SetDataId(FName("MusicVolume"));
+            MusicVolume->SetDataDisplayName(FText::FromString(TEXT("Music Volume")));
+            MusicVolume->SetDescriptionRichText(FText::FromString(TEXT("This is description for Music Volume")));
+            MusicVolume->SetDisplayValueRange(TRange<float>(0.0f, 1.0f));
+            MusicVolume->SetOutputValueRange(TRange<float>(0.0f, 2.0f));
+            MusicVolume->SetSliderStepSize(0.01f);
+            MusicVolume->SetDefaultValueFromString(LexToString(1.0f));
+            MusicVolume->SetDisplayNumericType(ECommonNumericType::Percentage);
+            MusicVolume->SetNumberFormattingOptions(UListDataObject_Scalar::NoDecimal());
+            MusicVolume->SetDataDynamicGetter(MAKE_OPTIONS_DATA_CONTROL(GetMusicVolume));
+            MusicVolume->SetDataDynamicSetter(MAKE_OPTIONS_DATA_CONTROL(SetMusicVolume));
+            MusicVolume->SetShouldApplyChangesImmediately(true);
+            
+            VolumeCategoryCollection->AddChildListData(MusicVolume);
         }
 
         // Test Item
