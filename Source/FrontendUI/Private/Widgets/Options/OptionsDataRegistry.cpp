@@ -149,6 +149,25 @@ void UOptionsDataRegistry::InitAudioCollectionTab()
             VolumeCategoryCollection->AddChildListData(MusicVolume);
         }
 
+        // Music Volume
+        {
+            UListDataObject_Scalar* SFXVolume = NewObject<UListDataObject_Scalar>();
+            SFXVolume->SetDataId(FName("SFXVolume"));
+            SFXVolume->SetDataDisplayName(FText::FromString(TEXT("SFX Volume")));
+            SFXVolume->SetDescriptionRichText(FText::FromString(TEXT("This is description for SFX Volume")));
+            SFXVolume->SetDisplayValueRange(TRange<float>(0.0f, 1.0f));
+            SFXVolume->SetOutputValueRange(TRange<float>(0.0f, 2.0f));
+            SFXVolume->SetSliderStepSize(0.01f);
+            SFXVolume->SetDefaultValueFromString(LexToString(1.0f));
+            SFXVolume->SetDisplayNumericType(ECommonNumericType::Percentage);
+            SFXVolume->SetNumberFormattingOptions(UListDataObject_Scalar::NoDecimal());
+            SFXVolume->SetDataDynamicGetter(MAKE_OPTIONS_DATA_CONTROL(GetSFXVolume));
+            SFXVolume->SetDataDynamicSetter(MAKE_OPTIONS_DATA_CONTROL(SetSFXVolume));
+            SFXVolume->SetShouldApplyChangesImmediately(true);
+            
+            VolumeCategoryCollection->AddChildListData(SFXVolume);
+        }
+
         // Test Item
         {
             UListDataObject_String* TestItem = NewObject<UListDataObject_String>();
