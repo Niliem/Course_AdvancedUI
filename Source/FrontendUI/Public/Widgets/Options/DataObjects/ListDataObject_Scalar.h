@@ -26,10 +26,19 @@ public:
     static FCommonNumberFormattingOptions WithDecimal(int32 NumFragDigit);
 
     float GetCurrentValue() const;
-    void SetCurrentValue(float Value);
+    void SetCurrentValue(float InNewValue);
 
+protected:
+    //~ Begin UListDataObject_Base Interface
+    virtual bool CanResetBackToDefaultValue() const override;
+    virtual bool TryResetBackToDefaultValue() override;
+    //~ End UListDataObject_Base Interface
+    
 private:
     float StringToFloat(const FString& InString) const;
+
+    bool TrySetCurrentOptionValueFromFloat(float InNewValue, EOptionsListDataModifyReason ModifyReason);
+    bool TrySetCurrentOptionValueFromString(const FString& InStringValue, EOptionsListDataModifyReason ModifyReason);
     
     TRange<float> DisplayValueRange = TRange<float>(0.0f, 1.0f);
     TRange<float> OutputValueRange = TRange<float>(0.0f, 1.0f);
