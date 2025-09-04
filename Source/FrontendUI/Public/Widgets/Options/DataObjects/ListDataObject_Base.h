@@ -44,10 +44,16 @@ public:
 
     void SetShouldApplyChangesImmediately(bool bShouldApplyImmediately) { bShouldApplyChangesImmediately = bShouldApplyImmediately; }
 
+    void AddEditCondition(const FOptionsDataEditConditionDescriptor& InEditCondition);
+    bool IsDataCurrentlyEditable();
+
 protected:
     virtual void OnDataObjectInitialized();
     virtual void NotifyListDataModified(UListDataObject_Base* ModifiedData, EOptionsListDataModifyReason ModifyReason = EOptionsListDataModifyReason::DirectlyModified);
 
+    virtual bool CanSetToForcedStringValue(const FString& InForcedValue) const { return false; }
+    virtual void OnSetToForcedStringValue(const FString& InForcedValue) {}
+    
 private:
     FName DataId;
     FText DataDisplayName;
@@ -59,4 +65,7 @@ private:
     UListDataObject_Base* ParentData;
 
     bool bShouldApplyChangesImmediately = false;
+
+    UPROPERTY(Transient)
+    TArray<FOptionsDataEditConditionDescriptor> EditConditionDescArray;
 };
