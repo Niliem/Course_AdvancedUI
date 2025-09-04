@@ -220,6 +220,8 @@ void UOptionsDataRegistry::InitVideoCollectionTab()
     VideoTabCollection->SetDataId(FName("VideoTabCollection"));
     VideoTabCollection->SetDataDisplayName(FText::FromString(TEXT("Video")));
 
+    UListDataObject_StringEnum* CachedWindowMode = nullptr; 
+
     // Display Category Collection
     {
         UListDataObject_Collection* DisplayCategoryCollection = NewObject<UListDataObject_Collection>();
@@ -249,8 +251,9 @@ void UOptionsDataRegistry::InitVideoCollectionTab()
             WindowMode->SetDataDynamicGetter(MAKE_OPTIONS_DATA_CONTROL(GetFullscreenMode));
             WindowMode->SetDataDynamicSetter(MAKE_OPTIONS_DATA_CONTROL(SetFullscreenMode));
             WindowMode->SetShouldApplyChangesImmediately(true);
-            WindowMode->AddEditCondition(PackagedBuildOnlyCondition);
             
+            WindowMode->AddEditCondition(PackagedBuildOnlyCondition);
+            CachedWindowMode = WindowMode;
             VideoTabCollection->AddChildListData(WindowMode);
         }
         
@@ -264,8 +267,22 @@ void UOptionsDataRegistry::InitVideoCollectionTab()
             ScreenResolution->SetDataDynamicGetter(MAKE_OPTIONS_DATA_CONTROL(GetScreenResolution));
             ScreenResolution->SetDataDynamicSetter(MAKE_OPTIONS_DATA_CONTROL(SetScreenResolution));
             ScreenResolution->SetShouldApplyChangesImmediately(true);
+            
+            FOptionsDataEditConditionDescriptor WindowModeEditCondition;
+            WindowModeEditCondition.SetEditConditionFunc([CachedWindowMode]()->bool
+            {
+                if (!CachedWindowMode)
+                    return false;
+
+                const bool bIsBorderlessWindow = CachedWindowMode->GetCurrentValueAsEnum<EWindowMode::Type>() == EWindowMode::WindowedFullscreen;
+                return !bIsBorderlessWindow;
+            });
+            WindowModeEditCondition.SetDisabledRichReason(TEXT("\n\n<Disabled>Screen Resolution is not adjustable when the 'Window Mode' is set to Borderless Window.The value must match with the maximum allowed resolution.</>"));
+            WindowModeEditCondition.SetDisabledForcedStringValue(ScreenResolution->GetMaximumAllowedResolution());
+
             ScreenResolution->AddEditCondition(PackagedBuildOnlyCondition);
-                    
+            ScreenResolution->AddEditCondition(WindowModeEditCondition);
+            
             VideoTabCollection->AddChildListData(ScreenResolution);
         }
     }

@@ -56,6 +56,18 @@ bool UListDataObject_String::TryResetBackToDefaultValue()
     return bResult;
 }
 
+bool UListDataObject_String::CanSetToForcedStringValue(const FString& InForcedValue) const
+{
+    return CurrentStringValue != InForcedValue;
+}
+
+void UListDataObject_String::OnSetToForcedStringValue(const FString& InForcedValue)
+{
+    CurrentStringValue = InForcedValue;
+    TrySetDisplayTextFromStringValue(CurrentStringValue);
+    TrySetOptionValueFromStringValue(CurrentStringValue, EOptionsListDataModifyReason::DependencyModified);
+}
+
 void UListDataObject_String::AdvanceToNextOption()
 {
     if (AvailableOptionsStringArray.IsEmpty() || AvailableOptionsTextArray.IsEmpty())

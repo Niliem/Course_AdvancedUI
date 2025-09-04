@@ -17,6 +17,8 @@ class FRONTENDUI_API UListDataObject_StringResolution : public UListDataObject_S
 public:
     void InitResolutionValues();
 
+    FORCEINLINE FString GetMaximumAllowedResolution() const { return MaximumAllowedResolution; }
+
 protected:
     //~ Begin UListDataObject_Base Interface
     virtual void OnDataObjectInitialized() override;
