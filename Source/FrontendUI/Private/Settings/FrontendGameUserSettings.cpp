@@ -12,7 +12,8 @@ UFrontendGameUserSettings::UFrontendGameUserSettings()
     : OverallVolume(1.0f)
     , MusicVolume(1.0f)
     , SFXVolume(1.0f)
-    , bAllowBackgroundAudio()
+    , bAllowBackgroundAudio(false)
+    , bUseHDRAudio(false) 
 {
 }
 
@@ -150,4 +151,9 @@ void UFrontendGameUserSettings::SetSFXVolume(float InNewSFXVolume)
 void UFrontendGameUserSettings::SetAllowBackgroundAudio(bool bIsAllowed)
 {
     bAllowBackgroundAudio = bIsAllowed;
+}
+
+void UFrontendGameUserSettings::SetUseHDRAudio(bool bUse)
+{
+    bUseHDRAudio = bUse;
 }
