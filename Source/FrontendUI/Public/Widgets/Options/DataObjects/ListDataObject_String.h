@@ -51,6 +51,9 @@ protected:
 };
 
 
+//********** UListDataObject_StringBool **********//
+
+
 UCLASS()
 class FRONTENDUI_API UListDataObject_StringBool : public UListDataObject_String
 {
@@ -72,4 +75,40 @@ private:
     
     const FString TrueString = TEXT("true");
     const FString FalseString = TEXT("false");
+};
+
+
+//********** UListDataObject_StringEnum **********//
+
+
+UCLASS()
+class FRONTENDUI_API UListDataObject_StringEnum : public UListDataObject_String
+{
+    GENERATED_BODY()
+
+public:
+    template<typename EnumType>
+    void AddEnumOption(EnumType InEnumOption, const FText& InDisplayText)
+    {
+        const UEnum* StaticEnumOption = StaticEnum<EnumType>();
+        const FString ConvertedString = StaticEnumOption->GetNameStringByValue(InEnumOption);
+
+        AddDynamicOption(ConvertedString, InDisplayText);
+    }
+
+    template<typename EnumType>
+    EnumType GetCurrentValueAsEnum() const
+    {
+        const UEnum* StaticEnumOption = StaticEnum<EnumType>();
+        return static_cast<EnumType>(StaticEnumOption->GetValueByNameString(CurrentStringValue));
+    }
+
+    template<typename EnumType>
+    void SetDefaultValueFromEnumOption(EnumType InEnumOption)
+    {
+        const UEnum* StaticEnumOption = StaticEnum<EnumType>();
+        const FString ConvertedString = StaticEnumOption->GetNameStringByValue(InEnumOption);
+
+        SetDefaultValueFromString(ConvertedString);
+    }
 };
