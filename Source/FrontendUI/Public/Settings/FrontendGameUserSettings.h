@@ -46,6 +46,12 @@ public:
 
     UFUNCTION()
     void SetSFXVolume(float InNewSFXVolume);
+
+    UFUNCTION()
+    bool GetAllowBackgroundAudio() const { return bAllowBackgroundAudio; }
+
+    UFUNCTION()
+    void SetAllowBackgroundAudio(bool bIsAllowed);
     //***** Audio Collection Tab *****//
 
 private:
@@ -64,5 +70,8 @@ private:
 
     UPROPERTY(Config)
     float SFXVolume;
+
+    UPROPERTY(Config)
+    bool bAllowBackgroundAudio;
     //***** Audio Collection Tab *****//
 };

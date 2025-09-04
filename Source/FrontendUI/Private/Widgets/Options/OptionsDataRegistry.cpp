@@ -167,14 +167,30 @@ void UOptionsDataRegistry::InitAudioCollectionTab()
             
             VolumeCategoryCollection->AddChildListData(SFXVolume);
         }
+    }
 
-        // Test Item
+    // Sound Category
+    {
+        UListDataObject_Collection* SoundCategoryCollection = NewObject<UListDataObject_Collection>();
+        SoundCategoryCollection->SetDataId(FName("SoundCategoryCollection"));
+        SoundCategoryCollection->SetDataDisplayName(FText::FromString(TEXT("Sound")));
+        
+        AudioTabCollection->AddChildListData(SoundCategoryCollection);
+
+        // Allow Background Audio
         {
-            UListDataObject_String* TestItem = NewObject<UListDataObject_String>();
-            TestItem->SetDataId(FName("TestItem"));
-            TestItem->SetDataDisplayName(FText::FromString(TEXT("Test Item")));
+            UListDataObject_StringBool* AllowBackgroundAudio = NewObject<UListDataObject_StringBool>();
+            AllowBackgroundAudio->SetDataId(FName("AllowBackgroundAudio"));
+            AllowBackgroundAudio->SetDataDisplayName(FText::FromString(TEXT("Allow Background Audio")));
+            AllowBackgroundAudio->SetDescriptionRichText(FText::FromString(TEXT("This is description for Allow Background Audio")));
+            AllowBackgroundAudio->OverrideTrueDisplayText(FText::FromString(TEXT("Enabled")));
+            AllowBackgroundAudio->OverrideFalseDisplayText(FText::FromString(TEXT("Disabled")));
+            AllowBackgroundAudio->SetFalseAsDefaultValue();
+            AllowBackgroundAudio->SetDataDynamicGetter(MAKE_OPTIONS_DATA_CONTROL(GetAllowBackgroundAudio));
+            AllowBackgroundAudio->SetDataDynamicSetter(MAKE_OPTIONS_DATA_CONTROL(SetAllowBackgroundAudio));
+            AllowBackgroundAudio->SetShouldApplyChangesImmediately(true);
             
-            VolumeCategoryCollection->AddChildListData(TestItem);
+            SoundCategoryCollection->AddChildListData(AllowBackgroundAudio);
         }
     }
     

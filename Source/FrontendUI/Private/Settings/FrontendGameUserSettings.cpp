@@ -12,6 +12,7 @@ UFrontendGameUserSettings::UFrontendGameUserSettings()
     : OverallVolume(1.0f)
     , MusicVolume(1.0f)
     , SFXVolume(1.0f)
+    , bAllowBackgroundAudio()
 {
 }
 
@@ -144,4 +145,9 @@ void UFrontendGameUserSettings::SetSFXVolume(float InNewSFXVolume)
     );
  
     UGameplayStatics::PushSoundMixModifier(InAudioWorld, DefaultSoundMix);
+}
+
+void UFrontendGameUserSettings::SetAllowBackgroundAudio(bool bIsAllowed)
+{
+    bAllowBackgroundAudio = bIsAllowed;
 }
