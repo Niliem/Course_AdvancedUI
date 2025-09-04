@@ -57,10 +57,18 @@ void UWidget_ListEntry_Base::OnOwningListDataObjectSet(UListDataObject_Base* Lis
     
     if (!ListDataObject->OnListDataModified.IsBoundToObject(this))
         ListDataObject->OnListDataModified.AddUObject(this, &UWidget_ListEntry_Base::OnOwningListDataObjectModified);
+
+    OnToggleEditableState(ListDataObject->IsDataCurrentlyEditable());
 }
 
 void UWidget_ListEntry_Base::OnOwningListDataObjectModified(UListDataObject_Base* ModifiedData, EOptionsListDataModifyReason ModifyReason)
 {
+}
+
+void UWidget_ListEntry_Base::OnToggleEditableState(bool bIsEditable)
+{
+    if (CommonText_SettingDisplayName)
+        CommonText_SettingDisplayName->SetIsEnabled(bIsEditable);
 }
 
 void UWidget_ListEntry_Base::SelectThisEntryWidget()

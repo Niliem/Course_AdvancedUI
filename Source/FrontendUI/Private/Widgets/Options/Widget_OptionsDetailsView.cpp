@@ -38,7 +38,7 @@ void UWidget_OptionsDetailsView::UpdateDetailsViewInfo(UListDataObject_Base* InD
         );
     CommonRichTextBlock_DynamicDetails->SetText(FText::FromString(DynamicDetails));
     
-    CommonRichTextBlock_DisabledReason->SetText(InDataObject->GetDisabledRichText());
+    CommonRichTextBlock_DisabledReason->SetText(InDataObject->IsDataCurrentlyEditable() ? FText::GetEmpty() : InDataObject->GetDisabledRichText());
 }
 
 void UWidget_OptionsDetailsView::ClearDetailsViewInfo()
