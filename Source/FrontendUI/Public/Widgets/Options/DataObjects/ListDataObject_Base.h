@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "FrontendEnumTypes.h"
+#include "FrontendStructTypes.h"
 #include "ListDataObject_Base.generated.h"
 
 #define LIST_DATA_ACCESSOR(DataType, PropertyName) \
