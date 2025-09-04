@@ -16,4 +16,9 @@ class FRONTENDUI_API UListDataObject_StringResolution : public UListDataObject_S
 	
 public:
     void InitResolutionValues();
+
+protected:
+    //~ Begin UListDataObject_Base Interface
+    virtual void OnDataObjectInitialized() override;
+    //~ End UListDataObject_Base Interface
 };
