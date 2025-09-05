@@ -282,6 +282,8 @@ void UOptionsDataRegistry::InitVideoCollectionTab()
 
             ScreenResolution->AddEditCondition(PackagedBuildOnlyCondition);
             ScreenResolution->AddEditCondition(WindowModeEditCondition);
+
+            ScreenResolution->AddEditDependencyData(CachedWindowMode);
             
             VideoTabCollection->AddChildListData(ScreenResolution);
         }

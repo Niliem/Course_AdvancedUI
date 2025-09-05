@@ -22,6 +22,7 @@ class FRONTENDUI_API UListDataObject_Base : public UObject
 public:
     DECLARE_MULTICAST_DELEGATE_TwoParams(FOnListDataModifiedDelegate, UListDataObject_Base*, EOptionsListDataModifyReason);
     FOnListDataModifiedDelegate OnListDataModified;
+    FOnListDataModifiedDelegate OnDependencyDataModified;
     
     LIST_DATA_ACCESSOR(FName, DataId);
     LIST_DATA_ACCESSOR(FText, DataDisplayName);
@@ -45,6 +46,7 @@ public:
     void SetShouldApplyChangesImmediately(bool bShouldApplyImmediately) { bShouldApplyChangesImmediately = bShouldApplyImmediately; }
 
     void AddEditCondition(const FOptionsDataEditConditionDescriptor& InEditCondition);
+    void AddEditDependencyData(UListDataObject_Base* InDependencyData);
     bool IsDataCurrentlyEditable();
 
 protected:
@@ -53,6 +55,8 @@ protected:
 
     virtual bool CanSetToForcedStringValue(const FString& InForcedValue) const { return false; }
     virtual void OnSetToForcedStringValue(const FString& InForcedValue) {}
+
+    virtual void OnEditDependencyDataModified(UListDataObject_Base* ModifiedDependencyData, EOptionsListDataModifyReason ModifyReason);
     
 private:
     FName DataId;
