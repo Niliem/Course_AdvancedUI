@@ -288,6 +288,33 @@ void UOptionsDataRegistry::InitVideoCollectionTab()
             VideoTabCollection->AddChildListData(ScreenResolution);
         }
     }
+
+    // Graphics Category Collection
+    {
+        UListDataObject_Collection* GraphicsCategoryCollection = NewObject<UListDataObject_Collection>();
+        GraphicsCategoryCollection->SetDataId(FName("Graphics Category Collection"));
+        GraphicsCategoryCollection->SetDataDisplayName(FText::FromString(TEXT("Graphics")));
+        
+        VideoTabCollection->AddChildListData(GraphicsCategoryCollection);
+
+        // Display Gamma
+        {
+            UListDataObject_Scalar* DisplayGamma = NewObject<UListDataObject_Scalar>();
+            DisplayGamma->SetDataId(FName("DisplayGamma"));
+            DisplayGamma->SetDataDisplayName(FText::FromString(TEXT("Brightness")));
+            DisplayGamma->SetDescriptionRichText(FText::FromString(TEXT("This is description for Brightness")));
+            DisplayGamma->SetDisplayValueRange(TRange<float>(0.0f, 1.0f));
+            DisplayGamma->SetOutputValueRange(TRange<float>(1.2f, 3.2f)); // 2.2f is default value
+            DisplayGamma->SetSliderStepSize(0.01f);
+            DisplayGamma->SetDefaultValueFromString(LexToString(2.2f));
+            DisplayGamma->SetDisplayNumericType(ECommonNumericType::Percentage);
+            DisplayGamma->SetNumberFormattingOptions(UListDataObject_Scalar::NoDecimal());
+            DisplayGamma->SetDataDynamicGetter(MAKE_OPTIONS_DATA_CONTROL(GetDisplayGamma));
+            DisplayGamma->SetDataDynamicSetter(MAKE_OPTIONS_DATA_CONTROL(SetDisplayGamma));
+
+            GraphicsCategoryCollection->AddChildListData(DisplayGamma);
+        }
+    }
     
     RegisteredOptionsTabCollections.Add(VideoTabCollection);
 }

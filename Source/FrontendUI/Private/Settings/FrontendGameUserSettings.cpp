@@ -13,7 +13,7 @@ UFrontendGameUserSettings::UFrontendGameUserSettings()
     , MusicVolume(1.0f)
     , SFXVolume(1.0f)
     , bAllowBackgroundAudio(false)
-    , bUseHDRAudio(false) 
+    , bUseHDRAudio(false)
 {
 }
 
@@ -156,4 +156,18 @@ void UFrontendGameUserSettings::SetAllowBackgroundAudio(bool bIsAllowed)
 void UFrontendGameUserSettings::SetUseHDRAudio(bool bUse)
 {
     bUseHDRAudio = bUse;
+}
+
+float UFrontendGameUserSettings::GetDisplayGamma() const
+{
+    if (GEngine)
+        return GEngine->GetDisplayGamma();
+    
+    return 0.0f;
+}
+
+void UFrontendGameUserSettings::SetDisplayGamma(float InNewDisplayGamma)
+{
+    if (GEngine)
+        GEngine->DisplayGamma = InNewDisplayGamma;
 }
