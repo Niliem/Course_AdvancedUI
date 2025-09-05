@@ -52,17 +52,31 @@ FReply UWidget_ListEntry_Base::NativeOnFocusReceived(const FGeometry& InGeometry
 
 void UWidget_ListEntry_Base::OnOwningListDataObjectSet(UListDataObject_Base* ListDataObject)
 {
-    if (CommonText_SettingDisplayName)
-        CommonText_SettingDisplayName->SetText(ListDataObject->GetDataDisplayName());
-    
-    if (!ListDataObject->OnListDataModified.IsBoundToObject(this))
-        ListDataObject->OnListDataModified.AddUObject(this, &UWidget_ListEntry_Base::OnOwningListDataObjectModified);
+    if (!ListDataObject)
+        return;
 
-    OnToggleEditableState(ListDataObject->IsDataCurrentlyEditable());
+    CachedOwningDataObject = ListDataObject;
+    
+    if (CommonText_SettingDisplayName)
+        CommonText_SettingDisplayName->SetText(CachedOwningDataObject->GetDataDisplayName());
+    
+    if (!CachedOwningDataObject->OnListDataModified.IsBoundToObject(this))
+        CachedOwningDataObject->OnListDataModified.AddUObject(this, &UWidget_ListEntry_Base::OnOwningListDataObjectModified);
+
+    if (!CachedOwningDataObject->OnDependencyDataModified.IsBoundToObject(this))
+        CachedOwningDataObject->OnDependencyDataModified.AddUObject(this, &UWidget_ListEntry_Base::OnOwningDependencyObjectModified);
+
+    OnToggleEditableState(CachedOwningDataObject->IsDataCurrentlyEditable());
 }
 
 void UWidget_ListEntry_Base::OnOwningListDataObjectModified(UListDataObject_Base* ModifiedData, EOptionsListDataModifyReason ModifyReason)
 {
+}
+
+void UWidget_ListEntry_Base::OnOwningDependencyObjectModified(UListDataObject_Base* ModifiedDependencyData, EOptionsListDataModifyReason ModifyReason)
+{
+    if (CachedOwningDataObject)
+        OnToggleEditableState(CachedOwningDataObject->IsDataCurrentlyEditable());
 }
 
 void UWidget_ListEntry_Base::OnToggleEditableState(bool bIsEditable)
