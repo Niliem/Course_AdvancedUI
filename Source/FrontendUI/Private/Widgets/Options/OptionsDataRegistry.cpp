@@ -226,7 +226,7 @@ void UOptionsDataRegistry::InitVideoCollectionTab()
     // Display Category Collection
     {
         UListDataObject_Collection* DisplayCategoryCollection = NewObject<UListDataObject_Collection>();
-        DisplayCategoryCollection->SetDataId(FName("Display Category Collection"));
+        DisplayCategoryCollection->SetDataId(FName("DisplayCategoryCollection"));
         DisplayCategoryCollection->SetDataDisplayName(FText::FromString(TEXT("Display")));
         
         VideoTabCollection->AddChildListData(DisplayCategoryCollection);
@@ -295,7 +295,7 @@ void UOptionsDataRegistry::InitVideoCollectionTab()
     // Graphics Category Collection
     {
         UListDataObject_Collection* GraphicsCategoryCollection = NewObject<UListDataObject_Collection>();
-        GraphicsCategoryCollection->SetDataId(FName("Graphics Category Collection"));
+        GraphicsCategoryCollection->SetDataId(FName("GraphicsCategoryCollection"));
         GraphicsCategoryCollection->SetDataDisplayName(FText::FromString(TEXT("Graphics")));
         
         VideoTabCollection->AddChildListData(GraphicsCategoryCollection);
@@ -525,6 +525,39 @@ void UOptionsDataRegistry::InitVideoCollectionTab()
             CachedOverallQuality->AddEditDependencyData(PostProcessingQuality);
             
             GraphicsCategoryCollection->AddChildListData(PostProcessingQuality);
+        }
+    }
+
+    // Advanced Graphics Category Collection
+    {
+        UListDataObject_Collection* AdvancedGraphicsCategoryCollection = NewObject<UListDataObject_Collection>();
+        AdvancedGraphicsCategoryCollection->SetDataId(FName("AdvancedGraphicsCategoryCollection"));
+        AdvancedGraphicsCategoryCollection->SetDataDisplayName(FText::FromString(TEXT("Advanced Graphics")));
+        
+        VideoTabCollection->AddChildListData(AdvancedGraphicsCategoryCollection);
+
+        // Vertical Sync
+        {
+            UListDataObject_StringBool* VerticalSync = NewObject<UListDataObject_StringBool>();
+            VerticalSync->SetDataId(FName("VerticalSync"));
+            VerticalSync->SetDataDisplayName(FText::FromString(TEXT("V-Sync")));
+            VerticalSync->SetDescriptionRichText(FText::FromString(TEXT("This is description for V-Sync")));
+            VerticalSync->SetFalseAsDefaultValue();
+            VerticalSync->SetDataDynamicGetter(MAKE_OPTIONS_DATA_CONTROL(IsVSyncEnabled));
+            VerticalSync->SetDataDynamicSetter(MAKE_OPTIONS_DATA_CONTROL(SetVSyncEnabled));
+            VerticalSync->SetShouldApplyChangesImmediately(true);
+
+            FOptionsDataEditConditionDescriptor FullscreenOnlyCondition;
+            FullscreenOnlyCondition.SetEditConditionFunc([CachedWindowMode]()->bool
+            {
+                return CachedWindowMode->GetCurrentValueAsEnum<EWindowMode::Type>() == EWindowMode::Fullscreen;
+            });
+            FullscreenOnlyCondition.SetDisabledRichReason(TEXT("\n\n<Disabled>This feature only works if the 'Window Mode' is set to 'Fullscreen'.</>"));
+            FullscreenOnlyCondition.SetDisabledForcedStringValue(TEXT("false"));
+            
+            VerticalSync->AddEditCondition(FullscreenOnlyCondition);
+            
+            AdvancedGraphicsCategoryCollection->AddChildListData(VerticalSync);
         }
     }
     
