@@ -223,7 +223,6 @@ void UOptionsDataRegistry::InitVideoCollectionTab()
     VideoTabCollection->SetDataDisplayName(FText::FromString(TEXT("Video")));
 
     UListDataObject_StringEnum* CachedWindowMode = nullptr;
-    UListDataObject_StringInteger* CachedOverallQuality = nullptr;
 
     // Display Category Collection
     {
@@ -320,6 +319,7 @@ void UOptionsDataRegistry::InitVideoCollectionTab()
             GraphicsCategoryCollection->AddChildListData(DisplayGamma);
         }
 
+        UListDataObject_StringInteger* CachedOverallQuality = nullptr;
         // Overall Quality
         {
             UListDataObject_StringInteger* OverallQuality = NewObject<UListDataObject_StringInteger>();
