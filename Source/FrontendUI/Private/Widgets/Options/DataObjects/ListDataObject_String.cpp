@@ -208,9 +208,12 @@ void UListDataObject_StringInteger::OnEditDependencyDataModified(UListDataObject
 {
     if (DataDynamicGetter)
     {
+        if (CurrentStringValue == DataDynamicGetter->GetValueAsString())
+            return;
+        
         CurrentStringValue = DataDynamicGetter->GetValueAsString();
 
-        if (TrySetDisplayTextFromStringValue(CurrentStringValue))
+        if (!TrySetDisplayTextFromStringValue(CurrentStringValue))
         {
             CurrentDisplayText = FText::FromString(TEXT("Custom"));
         }
