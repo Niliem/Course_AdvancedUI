@@ -220,7 +220,8 @@ void UOptionsDataRegistry::InitVideoCollectionTab()
     VideoTabCollection->SetDataId(FName("VideoTabCollection"));
     VideoTabCollection->SetDataDisplayName(FText::FromString(TEXT("Video")));
 
-    UListDataObject_StringEnum* CachedWindowMode = nullptr; 
+    UListDataObject_StringEnum* CachedWindowMode = nullptr;
+    UListDataObject_StringInteger* CachedOverallQuality = nullptr;
 
     // Display Category Collection
     {
@@ -253,7 +254,9 @@ void UOptionsDataRegistry::InitVideoCollectionTab()
             WindowMode->SetShouldApplyChangesImmediately(true);
             
             WindowMode->AddEditCondition(PackagedBuildOnlyCondition);
+            
             CachedWindowMode = WindowMode;
+            
             VideoTabCollection->AddChildListData(WindowMode);
         }
         
@@ -330,7 +333,30 @@ void UOptionsDataRegistry::InitVideoCollectionTab()
             OverallQuality->SetDataDynamicSetter(MAKE_OPTIONS_DATA_CONTROL(SetOverallScalabilityLevel));
             OverallQuality->SetShouldApplyChangesImmediately(true);
 
+            CachedOverallQuality = OverallQuality;
+
             GraphicsCategoryCollection->AddChildListData(OverallQuality);
+        }
+
+        // Resolution Scale
+        {
+            UListDataObject_Scalar* ResolutionScale = NewObject<UListDataObject_Scalar>();
+            ResolutionScale->SetDataId(FName("ResolutionScale"));
+            ResolutionScale->SetDataDisplayName(FText::FromString(TEXT("Resolution Scale")));
+            ResolutionScale->SetDescriptionRichText(FText::FromString(TEXT("This is description for Resolution Scale")));
+            ResolutionScale->SetDisplayValueRange(TRange<float>(0.0f, 1.0f));
+            ResolutionScale->SetOutputValueRange(TRange<float>(0.0f, 1.0f));
+            ResolutionScale->SetSliderStepSize(0.01f);
+            ResolutionScale->SetDefaultValueFromString(LexToString(1.0f));
+            ResolutionScale->SetDisplayNumericType(ECommonNumericType::Percentage);
+            ResolutionScale->SetNumberFormattingOptions(UListDataObject_Scalar::NoDecimal());
+            ResolutionScale->SetDataDynamicGetter(MAKE_OPTIONS_DATA_CONTROL(GetResolutionScaleNormalized));
+            ResolutionScale->SetDataDynamicSetter(MAKE_OPTIONS_DATA_CONTROL(SetResolutionScaleNormalized));
+            ResolutionScale->SetShouldApplyChangesImmediately(true);
+
+            ResolutionScale->AddEditDependencyData(CachedOverallQuality);
+
+            GraphicsCategoryCollection->AddChildListData(ResolutionScale);
         }
     }
     
