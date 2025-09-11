@@ -13,7 +13,6 @@
 #include "Widgets/Options/DataObjects/ListDataObject_StringResolution.h"
 #include "Internationalization/StringTableRegistry.h"
 #include "EnhancedInputSubsystems.h"
-#include "FrontendDebugHelper.h"
 #include "UserSettings/EnhancedInputUserSettings.h"
 #include "Widgets/Options/DataObjects/ListDataObject_KeyRemap.h"
 
