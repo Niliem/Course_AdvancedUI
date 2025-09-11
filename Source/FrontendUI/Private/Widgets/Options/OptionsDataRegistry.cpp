@@ -608,6 +608,10 @@ void UOptionsDataRegistry::InitControlCollectionTab(ULocalPlayer* InOwningLocalP
 
         ControlTabCollection->AddChildListData(KeyboardMouseCategoryCollection);
 
+        FPlayerMappableKeyQueryOptions KeyboardMouseOnly;
+        KeyboardMouseOnly.KeyToMatch = EKeys::S;
+        KeyboardMouseOnly.bMatchBasicKeyTypes = true;
+
         for (const TPair<FString, TObjectPtr<UEnhancedPlayerMappableKeyProfile>>& ProfilePair : EnhancedInputUserSettings->GetAllAvailableKeyProfiles())
         {
             const TObjectPtr<UEnhancedPlayerMappableKeyProfile>& Profile = ProfilePair.Value;
@@ -615,6 +619,9 @@ void UOptionsDataRegistry::InitControlCollectionTab(ULocalPlayer* InOwningLocalP
             {
                 for (const FPlayerKeyMapping& KeyMapping : RowPair.Value.Mappings)
                 {
+                    if (!Profile->DoesMappingPassQueryOptions(KeyMapping, KeyboardMouseOnly))
+                        continue;
+                    
                     Debug::Print(
                         TEXT("Mapping ID: ") + KeyMapping.GetMappingName().ToString() +
                         TEXT(", Display Name: ") + KeyMapping.GetDisplayName().ToString() +
