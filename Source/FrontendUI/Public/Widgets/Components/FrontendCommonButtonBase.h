@@ -6,6 +6,7 @@
 #include "CommonButtonBase.h"
 #include "FrontendCommonButtonBase.generated.h"
 
+class UCommonLazyImage;
 class UCommonTextBlock;
 
 /**
@@ -22,6 +23,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Frontend Button")
     FText GetButtonText() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Frontend Button")
+    void SetButtonDisplayImage(const FSlateBrush& Image);
     
 private:
     //~ Begin UUserWidget Interface
@@ -37,6 +41,9 @@ private:
     //***** Bound Widgets *****//
     UPROPERTY(meta = (BindWidgetOptional))
     UCommonTextBlock* CommonTextBlock_ButtonText;
+
+    UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional, AllowPrivateAccess= "true"))
+    UCommonLazyImage* CommonLazyImage_ButtonImage;
     //***** Bound Widgets *****//
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Frontend Button", meta = (AllowPrivateAccess = "true"))

@@ -2,6 +2,8 @@
 
 
 #include "Widgets/Components/FrontendCommonButtonBase.h"
+
+#include "CommonLazyImage.h"
 #include "Subsystems/FrontendUISubsystem.h"
 #include "CommonTextBlock.h"
 
@@ -19,6 +21,12 @@ FText UFrontendCommonButtonBase::GetButtonText() const
         return CommonTextBlock_ButtonText->GetText();
 
     return FText();
+}
+
+void UFrontendCommonButtonBase::SetButtonDisplayImage(const FSlateBrush& Image)
+{
+    if (CommonLazyImage_ButtonImage)
+        CommonLazyImage_ButtonImage->SetBrush(Image);
 }
 
 void UFrontendCommonButtonBase::NativePreConstruct()
