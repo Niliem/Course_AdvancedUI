@@ -28,7 +28,7 @@ private:
     void InitGameplayCollectionTab();
     void InitAudioCollectionTab();
     void InitVideoCollectionTab();
-    void InitControlCollectionTab();
+    void InitControlCollectionTab(ULocalPlayer* InOwningLocalPlayer);
 
     void FindAllChildListItems(const UListDataObject_Base* InParent, TArray<UListDataObject_Base*>& OutFoundChildren) const;
 
