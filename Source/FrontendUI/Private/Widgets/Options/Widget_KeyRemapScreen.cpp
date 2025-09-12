@@ -4,7 +4,6 @@
 #include "Widgets/Options/Widget_KeyRemapScreen.h"
 
 #include "CommonRichTextBlock.h"
-#include "FrontendDebugHelper.h"
 #include "Framework/Application/IInputProcessor.h"
 
 class FKeyRemapScreenInputPreprocessor : public IInputProcessor
@@ -24,8 +23,7 @@ public:
 protected:
     //~ Begin IInputProcessor Interface
     virtual void Tick(const float DeltaTime, FSlateApplication& SlateApp, TSharedRef<ICursor> Cursor) override
-    {
-        
+    {        
     }
 
     virtual bool HandleKeyDownEvent(FSlateApplication& SlateApp, const FKeyEvent& InKeyEvent) override
@@ -123,7 +121,6 @@ void UWidget_KeyRemapScreen::OnValidKeyPressedDetected(const FKey& PressedKey)
 {
     RequestDeactivateWidget([this, PressedKey]()
     {
-        Debug::Print(PressedKey.GetDisplayName().ToString());
         OnKeyRemapScreenKeyPressed.ExecuteIfBound(PressedKey);
     });
 }
@@ -132,7 +129,6 @@ void UWidget_KeyRemapScreen::OnKeySelectCanceled(const FString& CancelReason)
 {
     RequestDeactivateWidget([this, CancelReason]()
     {
-        Debug::Print(CancelReason);
         OnKeyRemapScreenKeySelectCanceled.ExecuteIfBound(CancelReason);
     });
 }

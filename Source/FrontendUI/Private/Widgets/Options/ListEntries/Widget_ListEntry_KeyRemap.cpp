@@ -9,13 +9,14 @@
 #include "Widgets/Components/FrontendCommonButtonBase.h"
 #include "Widgets/Options/Widget_KeyRemapScreen.h"
 #include "Widgets/Options/DataObjects/ListDataObject_KeyRemap.h"
+#include "FrontendDebugHelper.h"
 
 void UWidget_ListEntry_KeyRemap::NativeOnInitialized()
 {
     Super::NativeOnInitialized();
 
-    CommonButton_RemapKey->OnClicked().AddUObject(this, &UWidget_ListEntry_KeyRemap::OnRemapKeyBottonClicked);
-    CommonButton_ResetKeyBinding->OnClicked().AddUObject(this, &UWidget_ListEntry_KeyRemap::OnResetKeyBindingBottonClicked);    
+    CommonButton_RemapKey->OnClicked().AddUObject(this, &UWidget_ListEntry_KeyRemap::OnRemapKeyButtonClicked);
+    CommonButton_ResetKeyBinding->OnClicked().AddUObject(this, &UWidget_ListEntry_KeyRemap::OnResetKeyBindingButtonClicked);    
 }
 
 void UWidget_ListEntry_KeyRemap::OnOwningListDataObjectSet(UListDataObject_Base* ListDataObject)
@@ -35,7 +36,7 @@ void UWidget_ListEntry_KeyRemap::OnOwningListDataObjectModified(UListDataObject_
     Super::OnOwningListDataObjectModified(ModifiedData, ModifyReason);
 }
 
-void UWidget_ListEntry_KeyRemap::OnRemapKeyBottonClicked()
+void UWidget_ListEntry_KeyRemap::OnRemapKeyButtonClicked()
 {
     UFrontendUISubsystem::Get(this)->PushSoftWidgetToLayerStackAsync(
         UIGameplayTags::UI_Layer_Modal,
@@ -46,6 +47,9 @@ void UWidget_ListEntry_KeyRemap::OnRemapKeyBottonClicked()
             {
                 if (UWidget_KeyRemapScreen* KeyRemapScreen = Cast<UWidget_KeyRemapScreen>(PushedWidget))
                 {
+                    KeyRemapScreen->OnKeyRemapScreenKeyPressed.BindUObject(this, &UWidget_ListEntry_KeyRemap::OnKeyToRemapPressed);
+                    KeyRemapScreen->OnKeyRemapScreenKeySelectCanceled.BindUObject(this, &UWidget_ListEntry_KeyRemap::OnKeyRemapCanceled);
+                    
                     if (CachedOwningKeyRemapDataObject)
                     {
                         KeyRemapScreen->SetDesiredInputTypeToFilter(CachedOwningKeyRemapDataObject->GetDesiredInputKeyType());
@@ -55,6 +59,21 @@ void UWidget_ListEntry_KeyRemap::OnRemapKeyBottonClicked()
         });
 }
 
-void UWidget_ListEntry_KeyRemap::OnResetKeyBindingBottonClicked()
+void UWidget_ListEntry_KeyRemap::OnResetKeyBindingButtonClicked()
 {
+}
+
+void UWidget_ListEntry_KeyRemap::OnKeyToRemapPressed(const FKey& PressedKey)
+{
+    Debug::Print(TEXT("Valid key to remap detected. Key: ") + PressedKey.GetDisplayName().ToString());
+}
+
+void UWidget_ListEntry_KeyRemap::OnKeyRemapCanceled(const FString& CancelReason)
+{
+    UFrontendUISubsystem::Get(this)->PushConfirmScreenAsync(
+        EConfirmScreenType::Ok,
+        FText::FromString(TEXT("Key Remap")),
+        FText::FromString(CancelReason),
+        [](EConfirmScreenButtonType ClickedButton){}
+    );
 }

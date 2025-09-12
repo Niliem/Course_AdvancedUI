@@ -27,8 +27,11 @@ protected:
     //~ End UWidget_ListEntry_Base Interface
 
 private:
-    void OnRemapKeyBottonClicked();
-    void OnResetKeyBindingBottonClicked();
+    void OnRemapKeyButtonClicked();
+    void OnResetKeyBindingButtonClicked();
+
+    void OnKeyToRemapPressed(const FKey& PressedKey);
+    void OnKeyRemapCanceled(const FString& CancelReason);
 
     //***** Bound Widgets *****//
     UPROPERTY(BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess= "true"))
