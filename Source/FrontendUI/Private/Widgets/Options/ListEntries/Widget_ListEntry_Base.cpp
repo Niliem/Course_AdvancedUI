@@ -10,14 +10,16 @@
 
 void UWidget_ListEntry_Base::NativeOnListEntryWidgetHovered(bool bWasHovered)
 {
-    BP_OnListEntryWidgetHovered(bWasHovered, GetListItem() ? IsListItemSelected() : false );
-}
+    BP_OnListEntryWidgetHovered(bWasHovered, GetListItem() ? IsListItemSelected() : false);
 
-void UWidget_ListEntry_Base::NativeOnEntryReleased()
-{
-    IUserObjectListEntry::NativeOnEntryReleased();
-
-    NativeOnListEntryWidgetHovered(false);
+    if (bWasHovered)
+    {
+        BP_OnToggleEntryWidgetHighlightState(true);
+    }
+    else
+    {
+        BP_OnToggleEntryWidgetHighlightState(GetListItem() && IsListItemSelected() ? true : false);
+    }
 }
 
 void UWidget_ListEntry_Base::NativeOnListItemObjectSet(UObject* ListItemObject)
@@ -28,6 +30,20 @@ void UWidget_ListEntry_Base::NativeOnListItemObjectSet(UObject* ListItemObject)
     {
         OnOwningListDataObjectSet(CastedListItemObject);
     }
+}
+
+void UWidget_ListEntry_Base::NativeOnItemSelectionChanged(bool bIsSelected)
+{
+    IUserObjectListEntry::NativeOnItemSelectionChanged(bIsSelected);
+
+    BP_OnToggleEntryWidgetHighlightState(bIsSelected);
+}
+
+void UWidget_ListEntry_Base::NativeOnEntryReleased()
+{
+    IUserObjectListEntry::NativeOnEntryReleased();
+
+    NativeOnListEntryWidgetHovered(false);
 }
 
 FReply UWidget_ListEntry_Base::NativeOnFocusReceived(const FGeometry& InGeometry, const FFocusEvent& InFocusEvent)
@@ -45,8 +61,8 @@ FReply UWidget_ListEntry_Base::NativeOnFocusReceived(const FGeometry& InGeometry
                 return FReply::Handled().SetUserFocus(CachedWidgetToFocus.ToSharedRef());
             }
         }
-    } 
-    
+    }
+
     return Super::NativeOnFocusReceived(InGeometry, InFocusEvent);
 }
 
@@ -56,10 +72,10 @@ void UWidget_ListEntry_Base::OnOwningListDataObjectSet(UListDataObject_Base* Lis
         return;
 
     CachedOwningDataObject = ListDataObject;
-    
+
     if (CommonText_SettingDisplayName)
         CommonText_SettingDisplayName->SetText(CachedOwningDataObject->GetDataDisplayName());
-    
+
     if (!CachedOwningDataObject->OnListDataModified.IsBoundToObject(this))
         CachedOwningDataObject->OnListDataModified.AddUObject(this, &UWidget_ListEntry_Base::OnOwningListDataObjectModified);
 
