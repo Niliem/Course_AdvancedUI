@@ -8,7 +8,6 @@
 #include "Widgets/Components/FrontendTabListWidgetBase.h"
 #include "Widgets/Options/OptionsDataRegistry.h"
 #include "Widgets/Options/DataObjects/ListDataObject_Collection.h"
-#include "FrontendDebugHelper.h"
 #include "Settings/FrontendGameUserSettings.h"
 #include "Subsystems/FrontendUISubsystem.h"
 #include "Widgets/Components/FrontendCommonButtonBase.h"
@@ -116,15 +115,8 @@ void UWidget_OptionsScreen::HandleResetBoundAction()
                 if (!ResettableData)
                     continue;
 
-                if (ResettableData->TryResetBackToDefaultValue())
-                {
-                    Debug::Print(ResettableData->GetDataDisplayName().ToString() + TEXT(" was reset"));
-                }
-                else
-                {
+                if (!ResettableData->TryResetBackToDefaultValue())
                     bHasDataFailedToReset = true;
-                    Debug::Print(ResettableData->GetDataDisplayName().ToString() + TEXT(" failed to reset"));
-                }
             }
 
             if (!bHasDataFailedToReset)
