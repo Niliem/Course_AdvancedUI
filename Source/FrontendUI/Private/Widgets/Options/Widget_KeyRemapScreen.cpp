@@ -2,11 +2,19 @@
 
 
 #include "Widgets/Options/Widget_KeyRemapScreen.h"
+
+
 #include "FrontendDebugHelper.h"
 #include "Framework/Application/IInputProcessor.h"
 
 class FKeyRemapScreenInputPreprocessor : public IInputProcessor
 {
+public:
+    FKeyRemapScreenInputPreprocessor(ECommonInputType InInputTypeToListenTo)
+        : CachedInputTypeToListenTo(InInputTypeToListenTo)
+    {        
+    }
+    
 protected:
     //~ Begin IInputProcessor Interface
     virtual void Tick(const float DeltaTime, FSlateApplication& SlateApp, TSharedRef<ICursor> Cursor) override
@@ -26,13 +34,21 @@ protected:
         return true;
     }
     //~ End IInputProcessor Interface
+
+private:
+    ECommonInputType CachedInputTypeToListenTo;
 };
+
+void UWidget_KeyRemapScreen::SetDesiredInputTypeToFilter(ECommonInputType InDesiredInputType)
+{
+    CachedDesiredInputType = InDesiredInputType;
+}
 
 void UWidget_KeyRemapScreen::NativeOnActivated()
 {
     Super::NativeOnActivated();
 
-    CachedInputPreprocessor = MakeShared<FKeyRemapScreenInputPreprocessor>();
+    CachedInputPreprocessor = MakeShared<FKeyRemapScreenInputPreprocessor>(CachedDesiredInputType);
     FSlateApplication::Get().RegisterInputPreProcessor(CachedInputPreprocessor, -1);
 }
 
