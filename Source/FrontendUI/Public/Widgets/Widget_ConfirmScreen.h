@@ -39,6 +39,11 @@ public:
     static FConfirmScreenInfo CreateYesNoCancelScreen(const FText& ScreenTitle, const FText& ScreenMessage);
     
     void InitConfirmScreen(const FConfirmScreenInfo& ConfirmScreenInfo, TFunction<void (EConfirmScreenButtonType)> ClickedButtonCallback);
+
+protected:
+    //~ Begin UCommonActivatableWidget Interface
+    virtual UWidget* NativeGetDesiredFocusTarget() const override;
+    //~ End UCommonActivatableWidget Interface
     
 private:
     UPROPERTY(meta = (BindWidgetOptional))

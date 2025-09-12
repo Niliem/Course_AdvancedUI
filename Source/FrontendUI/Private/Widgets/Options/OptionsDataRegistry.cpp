@@ -612,27 +612,6 @@ void UOptionsDataRegistry::InitControlCollectionTab(ULocalPlayer* InOwningLocalP
         KeyboardMouseOnly.KeyToMatch = EKeys::S;
         KeyboardMouseOnly.bMatchBasicKeyTypes = true;
 
-        // Key Categories
-        TMap<FString, UListDataObject_Collection*> DisplayCategoryCollection;
-        auto GetOrCreateCategoryCollection = [&DisplayCategoryCollection, &KeyboardMouseCategoryCollection](FText DisplayCategory) -> UListDataObject_Collection*
-        {
-            if (DisplayCategory.IsEmpty())
-                return KeyboardMouseCategoryCollection;
-
-            FString DisplayCategoryString = DisplayCategory.ToString();
-            
-            if (UListDataObject_Collection** FoundCategory = DisplayCategoryCollection.Find(DisplayCategoryString))
-                return *FoundCategory;
-
-            UListDataObject_Collection* CategoryCollection = NewObject<UListDataObject_Collection>();
-            CategoryCollection->SetDataId(FName(DisplayCategoryString));
-            CategoryCollection->SetDataDisplayName(DisplayCategory);
-            KeyboardMouseCategoryCollection->AddChildListData(CategoryCollection);
-            DisplayCategoryCollection.Add(DisplayCategoryString, CategoryCollection);
-            
-            return CategoryCollection;
-        };
-
         for (const TPair<FString, TObjectPtr<UEnhancedPlayerMappableKeyProfile>>& ProfilePair : EnhancedInputUserSettings->GetAllAvailableKeyProfiles())
         {
             const TObjectPtr<UEnhancedPlayerMappableKeyProfile>& Profile = ProfilePair.Value;
@@ -648,8 +627,7 @@ void UOptionsDataRegistry::InitControlCollectionTab(ULocalPlayer* InOwningLocalP
                     KeyRemapDataObject->SetDataDisplayName(KeyMapping.GetDisplayName());
                     KeyRemapDataObject->InitKeyRemapData(EnhancedInputUserSettings, Profile, ECommonInputType::MouseAndKeyboard, KeyMapping);
 
-                    if (UListDataObject_Collection* CategoryCollection = GetOrCreateCategoryCollection(KeyMapping.GetDisplayCategory()))
-                        CategoryCollection->AddChildListData(KeyRemapDataObject);
+                    KeyboardMouseCategoryCollection->AddChildListData(KeyRemapDataObject);
                 }
             }
         }
@@ -666,28 +644,7 @@ void UOptionsDataRegistry::InitControlCollectionTab(ULocalPlayer* InOwningLocalP
         FPlayerMappableKeyQueryOptions GamepadOnly;
         GamepadOnly.KeyToMatch = EKeys::Gamepad_FaceButton_Right;
         GamepadOnly.bMatchBasicKeyTypes = true;
-
-        // Key Categories
-        TMap<FString, UListDataObject_Collection*> DisplayCategoryCollection;
-        auto GetOrCreateCategoryCollection = [&DisplayCategoryCollection, &GamepadCategoryCollection](FText DisplayCategory) -> UListDataObject_Collection*
-        {
-            if (DisplayCategory.IsEmpty())
-                return GamepadCategoryCollection;
-
-            FString DisplayCategoryString = DisplayCategory.ToString();
-            
-            if (UListDataObject_Collection** FoundCategory = DisplayCategoryCollection.Find(DisplayCategoryString))
-                return *FoundCategory;
-
-            UListDataObject_Collection* CategoryCollection = NewObject<UListDataObject_Collection>();
-            CategoryCollection->SetDataId(FName(DisplayCategoryString));
-            CategoryCollection->SetDataDisplayName(DisplayCategory);
-            GamepadCategoryCollection->AddChildListData(CategoryCollection);
-            DisplayCategoryCollection.Add(DisplayCategoryString, CategoryCollection);
-            
-            return CategoryCollection;
-        };
-
+        
         for (const TPair<FString, TObjectPtr<UEnhancedPlayerMappableKeyProfile>>& ProfilePair : EnhancedInputUserSettings->GetAllAvailableKeyProfiles())
         {
             const TObjectPtr<UEnhancedPlayerMappableKeyProfile>& Profile = ProfilePair.Value;
@@ -703,8 +660,7 @@ void UOptionsDataRegistry::InitControlCollectionTab(ULocalPlayer* InOwningLocalP
                     KeyRemapDataObject->SetDataDisplayName(KeyMapping.GetDisplayName());
                     KeyRemapDataObject->InitKeyRemapData(EnhancedInputUserSettings, Profile, ECommonInputType::Gamepad, KeyMapping);
 
-                    if (UListDataObject_Collection* CategoryCollection = GetOrCreateCategoryCollection(KeyMapping.GetDisplayCategory()))
-                        CategoryCollection->AddChildListData(KeyRemapDataObject);
+                    GamepadCategoryCollection->AddChildListData(KeyRemapDataObject);
                 }
             }
         }
