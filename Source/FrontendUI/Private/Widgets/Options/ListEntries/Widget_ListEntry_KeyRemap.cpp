@@ -9,14 +9,13 @@
 #include "Widgets/Components/FrontendCommonButtonBase.h"
 #include "Widgets/Options/Widget_KeyRemapScreen.h"
 #include "Widgets/Options/DataObjects/ListDataObject_KeyRemap.h"
-#include "FrontendDebugHelper.h"
 
 void UWidget_ListEntry_KeyRemap::NativeOnInitialized()
 {
     Super::NativeOnInitialized();
 
     CommonButton_RemapKey->OnClicked().AddUObject(this, &UWidget_ListEntry_KeyRemap::OnRemapKeyButtonClicked);
-    CommonButton_ResetKeyBinding->OnClicked().AddUObject(this, &UWidget_ListEntry_KeyRemap::OnResetKeyBindingButtonClicked);    
+    CommonButton_ResetKeyBinding->OnClicked().AddUObject(this, &UWidget_ListEntry_KeyRemap::OnResetKeyBindingButtonClicked);
 }
 
 void UWidget_ListEntry_KeyRemap::OnOwningListDataObjectSet(UListDataObject_Base* ListDataObject)
@@ -32,14 +31,14 @@ void UWidget_ListEntry_KeyRemap::OnOwningListDataObjectModified(UListDataObject_
 {
     if (CachedOwningKeyRemapDataObject)
         CommonButton_RemapKey->SetButtonDisplayImage(CachedOwningKeyRemapDataObject->GetIconFromCurrentKey());
-    
+
     Super::OnOwningListDataObjectModified(ModifiedData, ModifyReason);
 }
 
 void UWidget_ListEntry_KeyRemap::OnRemapKeyButtonClicked()
 {
     SelectThisEntryWidget();
-    
+
     UFrontendUISubsystem::Get(this)->PushSoftWidgetToLayerStackAsync(
         UIGameplayTags::UI_Layer_Modal,
         UFrontendFunctionLibrary::GetFrontendWidgetClassByTag(FrontendGameplayTags::Frontend_Widget_KeyRemap),
@@ -51,7 +50,7 @@ void UWidget_ListEntry_KeyRemap::OnRemapKeyButtonClicked()
                 {
                     KeyRemapScreen->OnKeyRemapScreenKeyPressed.BindUObject(this, &UWidget_ListEntry_KeyRemap::OnKeyToRemapPressed);
                     KeyRemapScreen->OnKeyRemapScreenKeySelectCanceled.BindUObject(this, &UWidget_ListEntry_KeyRemap::OnKeyRemapCanceled);
-                    
+
                     if (CachedOwningKeyRemapDataObject)
                     {
                         KeyRemapScreen->SetDesiredInputTypeToFilter(CachedOwningKeyRemapDataObject->GetDesiredInputKeyType());
@@ -65,7 +64,30 @@ void UWidget_ListEntry_KeyRemap::OnResetKeyBindingButtonClicked()
 {
     SelectThisEntryWidget();
 
-    
+    if (!CachedOwningKeyRemapDataObject)
+        return;
+
+    if (!CachedOwningKeyRemapDataObject->CanResetBackToDefaultValue())
+    {
+        UFrontendUISubsystem::Get(this)->PushConfirmScreenAsync(
+            EConfirmScreenType::Ok,
+            FText::FromString(TEXT("Reset Key Mapping")),
+            FText::FromString(TEXT("The key binding for ") + CachedOwningKeyRemapDataObject->GetDataDisplayName().ToString() + TEXT(" is already set to default.")),
+            [](EConfirmScreenButtonType ClickedButton) {}
+        );
+        return;
+    }
+
+    UFrontendUISubsystem::Get(this)->PushConfirmScreenAsync(
+            EConfirmScreenType::YesNo,
+            FText::FromString(TEXT("Reset Key Mapping")),
+            FText::FromString(TEXT("Are you sure you want to reset the key binding for ") + CachedOwningKeyRemapDataObject->GetDataDisplayName().ToString() + TEXT(" ?")),
+            [this](EConfirmScreenButtonType ClickedButton)
+            {
+                if (ClickedButton == EConfirmScreenButtonType::Confirmed)
+                    CachedOwningKeyRemapDataObject->TryResetBackToDefaultValue();
+            }
+        );
 }
 
 void UWidget_ListEntry_KeyRemap::OnKeyToRemapPressed(const FKey& PressedKey)
@@ -80,6 +102,6 @@ void UWidget_ListEntry_KeyRemap::OnKeyRemapCanceled(const FString& CancelReason)
         EConfirmScreenType::Ok,
         FText::FromString(TEXT("Key Remap")),
         FText::FromString(CancelReason),
-        [](EConfirmScreenButtonType ClickedButton){}
-    );
+        [](EConfirmScreenButtonType ClickedButton) { }
+        );
 }
