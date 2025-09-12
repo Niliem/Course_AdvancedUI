@@ -24,6 +24,8 @@ public:
 
     FSlateBrush GetIconFromCurrentKey() const;
 
+    void BindNewInputKey(const FKey& InNewKey);
+
     FORCEINLINE ECommonInputType GetDesiredInputKeyType() const { return CachedDesiredInputKeyType; }
     
 private:
