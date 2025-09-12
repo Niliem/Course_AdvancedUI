@@ -14,6 +14,12 @@ public:
         : CachedInputTypeToListenTo(InInputTypeToListenTo)
     {        
     }
+
+    DECLARE_DELEGATE_OneParam(FOnInputPreprocessorKeyPressedDelegate, const FKey&);
+    FOnInputPreprocessorKeyPressedDelegate OnInputPreprocessorKeyPressed;
+
+    DECLARE_DELEGATE_OneParam(FOnInputPreprocessorKeySelectCanceledDelegate, const FString&);
+    FOnInputPreprocessorKeySelectCanceledDelegate OnInputPreprocessorKeySelectCanceled;
     
 protected:
     //~ Begin IInputProcessor Interface
@@ -24,16 +30,45 @@ protected:
 
     virtual bool HandleKeyDownEvent(FSlateApplication& SlateApp, const FKeyEvent& InKeyEvent) override
     {
-        Debug::Print(TEXT("Pressed Key: ") + InKeyEvent.GetKey().GetDisplayName().ToString());
+        ProcessPressedKey(InKeyEvent.GetKey());
         return true;
     }
 
     virtual bool HandleMouseButtonDownEvent(FSlateApplication& SlateApp, const FPointerEvent& MouseEvent) override
     {
-        Debug::Print(TEXT("Pressed Key: ") + MouseEvent.GetEffectingButton().GetDisplayName().ToString());
+        ProcessPressedKey(MouseEvent.GetEffectingButton());
         return true;
     }
     //~ End IInputProcessor Interface
+
+    void ProcessPressedKey(const FKey& InPressedKey)
+    {
+        if (InPressedKey == EKeys::Escape)
+        {
+            OnInputPreprocessorKeySelectCanceled.ExecuteIfBound(TEXT("Key Remap has been canceled"));
+            return;
+        }
+
+        switch (CachedInputTypeToListenTo)
+        {
+            case ECommonInputType::MouseAndKeyboard:
+                if (InPressedKey.IsGamepadKey())
+                {
+                    OnInputPreprocessorKeySelectCanceled.ExecuteIfBound(TEXT("Detected Gamepad Key pressed for keyboard inputs. Key Remap has been cancled."));
+                    return;
+                }
+                break;
+            case ECommonInputType::Gamepad:
+                if (!InPressedKey.IsGamepadKey())
+                {
+                    OnInputPreprocessorKeySelectCanceled.ExecuteIfBound(TEXT("Detected non Gamepad Key pressed for Gamepad inputs. Key Remap has been cancled."));
+                    return;
+                }
+                break;
+        }
+
+        OnInputPreprocessorKeyPressed.ExecuteIfBound(InPressedKey);
+    }
 
 private:
     ECommonInputType CachedInputTypeToListenTo;
