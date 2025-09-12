@@ -3,6 +3,9 @@
 
 #include "Widgets/Options/ListEntries/Widget_ListEntry_KeyRemap.h"
 
+#include "FrontendFunctionLibrary.h"
+#include "FrontendGameplayTags.h"
+#include "Subsystems/FrontendUISubsystem.h"
 #include "Widgets/Components/FrontendCommonButtonBase.h"
 #include "Widgets/Options/DataObjects/ListDataObject_KeyRemap.h"
 
@@ -33,6 +36,13 @@ void UWidget_ListEntry_KeyRemap::OnOwningListDataObjectModified(UListDataObject_
 
 void UWidget_ListEntry_KeyRemap::OnRemapKeyBottonClicked()
 {
+    UFrontendUISubsystem::Get(this)->PushSoftWidgetToLayerStackAsync(
+        UIGameplayTags::UI_Layer_Modal,
+        UFrontendFunctionLibrary::GetFrontendWidgetClassByTag(FrontendGameplayTags::Frontend_Widget_KeyRemap),
+        [](EAsyncPushWidgetState PushState, UCommonActivatableWidget* PushedWidget)
+        {
+            
+        });
 }
 
 void UWidget_ListEntry_KeyRemap::OnResetKeyBindingBottonClicked()
