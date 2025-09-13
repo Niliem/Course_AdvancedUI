@@ -38,6 +38,14 @@ void UWidget_ListEntry_Scalar::OnOwningListDataObjectModified(UListDataObject_Ba
     AnalogSlider_SettingSlider->SetValue(CachedListDataObject->GetCurrentValue());
 }
 
+void UWidget_ListEntry_Scalar::OnToggleEditableState(bool bIsEditable)
+{
+    Super::OnToggleEditableState(bIsEditable);
+
+    CommonNumeric_SettingValue->SetIsEnabled(bIsEditable);
+    AnalogSlider_SettingSlider->SetIsEnabled(bIsEditable);
+}
+
 void UWidget_ListEntry_Scalar::OnSliderValueChanged(float Value)
 {
     if (!CachedListDataObject)

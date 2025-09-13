@@ -10,6 +10,14 @@ void UListDataObject_Collection::AddChildListData(UListDataObject_Base* ChildLis
     ChildListDataArray.Add(ChildListData);
 }
 
+void UListDataObject_Collection::Sort()
+{
+    ChildListDataArray.Sort([](const UListDataObject_Base& A, const UListDataObject_Base& B)
+    {
+        return A < B;
+    });
+}
+
 TArray<UListDataObject_Base*> UListDataObject_Collection::GetAllChildListData() const
 {
     return ChildListDataArray;

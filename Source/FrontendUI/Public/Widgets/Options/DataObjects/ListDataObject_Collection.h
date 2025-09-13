@@ -16,6 +16,7 @@ class FRONTENDUI_API UListDataObject_Collection : public UListDataObject_Base
 
 public:
     void AddChildListData(UListDataObject_Base* ChildListData);
+    void Sort();
     
     //~ Begin UListDataObject_Base Interface
     virtual TArray<UListDataObject_Base*> GetAllChildListData() const override;

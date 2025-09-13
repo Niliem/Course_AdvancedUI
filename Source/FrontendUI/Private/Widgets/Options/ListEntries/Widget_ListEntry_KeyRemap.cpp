@@ -35,6 +35,14 @@ void UWidget_ListEntry_KeyRemap::OnOwningListDataObjectModified(UListDataObject_
     Super::OnOwningListDataObjectModified(ModifiedData, ModifyReason);
 }
 
+void UWidget_ListEntry_KeyRemap::OnToggleEditableState(bool bIsEditable)
+{
+    Super::OnToggleEditableState(bIsEditable);
+
+    CommonButton_RemapKey->SetIsEnabled(bIsEditable);
+    CommonButton_ResetKeyBinding->SetIsEnabled(bIsEditable);
+}
+
 void UWidget_ListEntry_KeyRemap::OnRemapKeyButtonClicked()
 {
     SelectThisEntryWidget();

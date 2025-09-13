@@ -151,6 +151,8 @@ void UFrontendGameUserSettings::SetSFXVolume(float InNewSFXVolume)
 void UFrontendGameUserSettings::SetAllowBackgroundAudio(bool bIsAllowed)
 {
     bAllowBackgroundAudio = bIsAllowed;
+    
+    FApp::SetUnfocusedVolumeMultiplier(bAllowBackgroundAudio ? 1.0f : 0.0f);
 }
 
 void UFrontendGameUserSettings::SetUseHDRAudio(bool bUse)

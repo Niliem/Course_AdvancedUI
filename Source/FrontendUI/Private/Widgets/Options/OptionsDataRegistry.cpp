@@ -600,7 +600,7 @@ void UOptionsDataRegistry::InitControlCollectionTab(ULocalPlayer* InOwningLocalP
     UEnhancedInputUserSettings* EnhancedInputUserSettings = InputSubsystem->GetUserSettings();
     check(EnhancedInputUserSettings);
     
-    // Keyboard / Mouse Category
+    // Keyboard / Mouse and Gamepad Categories
     {
         UListDataObject_Collection* KeyboardMouseCategoryCollection = NewObject<UListDataObject_Collection>();
         KeyboardMouseCategoryCollection->SetDataId(FName("KeyboardMouseCategoryCollection"));
@@ -608,43 +608,20 @@ void UOptionsDataRegistry::InitControlCollectionTab(ULocalPlayer* InOwningLocalP
 
         ControlTabCollection->AddChildListData(KeyboardMouseCategoryCollection);
 
-        FPlayerMappableKeyQueryOptions KeyboardMouseOnly;
-        KeyboardMouseOnly.KeyToMatch = EKeys::S;
-        KeyboardMouseOnly.bMatchBasicKeyTypes = true;
-
-        for (const TPair<FString, TObjectPtr<UEnhancedPlayerMappableKeyProfile>>& ProfilePair : EnhancedInputUserSettings->GetAllAvailableKeyProfiles())
-        {
-            const TObjectPtr<UEnhancedPlayerMappableKeyProfile>& Profile = ProfilePair.Value;
-            for (const TPair<FName, FKeyMappingRow>& RowPair : Profile->GetPlayerMappingRows())
-            {
-                for (const FPlayerKeyMapping& KeyMapping : RowPair.Value.Mappings)
-                {
-                    if (!Profile->DoesMappingPassQueryOptions(KeyMapping, KeyboardMouseOnly))
-                        continue;
-
-                    UListDataObject_KeyRemap* KeyRemapDataObject = NewObject<UListDataObject_KeyRemap>();
-                    KeyRemapDataObject->SetDataId(KeyMapping.GetMappingName());
-                    KeyRemapDataObject->SetDataDisplayName(KeyMapping.GetDisplayName());
-                    KeyRemapDataObject->InitKeyRemapData(EnhancedInputUserSettings, Profile, ECommonInputType::MouseAndKeyboard, KeyMapping);
-
-                    KeyboardMouseCategoryCollection->AddChildListData(KeyRemapDataObject);
-                }
-            }
-        }
-    }
-
-    // Gamepad Category
-    {
         UListDataObject_Collection* GamepadCategoryCollection = NewObject<UListDataObject_Collection>();
         GamepadCategoryCollection->SetDataId(FName("GamepadCategoryCollection"));
         GamepadCategoryCollection->SetDataDisplayName(FText::FromString(TEXT("Gamepad")));
 
         ControlTabCollection->AddChildListData(GamepadCategoryCollection);
 
+        FPlayerMappableKeyQueryOptions KeyboardMouseOnly;
+        KeyboardMouseOnly.KeyToMatch = EKeys::S;
+        KeyboardMouseOnly.bMatchBasicKeyTypes = true;
+        
         FPlayerMappableKeyQueryOptions GamepadOnly;
         GamepadOnly.KeyToMatch = EKeys::Gamepad_FaceButton_Right;
         GamepadOnly.bMatchBasicKeyTypes = true;
-        
+
         for (const TPair<FString, TObjectPtr<UEnhancedPlayerMappableKeyProfile>>& ProfilePair : EnhancedInputUserSettings->GetAllAvailableKeyProfiles())
         {
             const TObjectPtr<UEnhancedPlayerMappableKeyProfile>& Profile = ProfilePair.Value;
@@ -652,18 +629,25 @@ void UOptionsDataRegistry::InitControlCollectionTab(ULocalPlayer* InOwningLocalP
             {
                 for (const FPlayerKeyMapping& KeyMapping : RowPair.Value.Mappings)
                 {
-                    if (!Profile->DoesMappingPassQueryOptions(KeyMapping, GamepadOnly))
-                        continue;
-
                     UListDataObject_KeyRemap* KeyRemapDataObject = NewObject<UListDataObject_KeyRemap>();
                     KeyRemapDataObject->SetDataId(KeyMapping.GetMappingName());
                     KeyRemapDataObject->SetDataDisplayName(KeyMapping.GetDisplayName());
-                    KeyRemapDataObject->InitKeyRemapData(EnhancedInputUserSettings, Profile, ECommonInputType::Gamepad, KeyMapping);
-
-                    GamepadCategoryCollection->AddChildListData(KeyRemapDataObject);
+                    if (Profile->DoesMappingPassQueryOptions(KeyMapping, KeyboardMouseOnly))
+                    {
+                        KeyRemapDataObject->InitKeyRemapData(EnhancedInputUserSettings, Profile, ECommonInputType::MouseAndKeyboard, KeyMapping);
+                        KeyboardMouseCategoryCollection->AddChildListData(KeyRemapDataObject);
+                    }
+                    else if (Profile->DoesMappingPassQueryOptions(KeyMapping, GamepadOnly))
+                    {
+                        KeyRemapDataObject->InitKeyRemapData(EnhancedInputUserSettings, Profile, ECommonInputType::Gamepad, KeyMapping);
+                        GamepadCategoryCollection->AddChildListData(KeyRemapDataObject);
+                    }
                 }
             }
         }
+
+        KeyboardMouseCategoryCollection->Sort();
+        GamepadCategoryCollection->Sort();
     }
     
     RegisteredOptionsTabCollections.Add(ControlTabCollection);
