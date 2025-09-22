@@ -87,7 +87,7 @@ void UFrontendLoadingScreenSubsystem::TryUpdateLoadingScreen()
     
     if (ShouldShowLoadingScreen())
     {
-        
+        OnLoadingReasonUpdated.Broadcast(CurrentLoadingReason);
     }
     else
     {
@@ -115,6 +115,8 @@ bool UFrontendLoadingScreenSubsystem::ShouldShowLoadingScreen() const
         return true;
     }
 
+    CurrentLoadingReason = TEXT("Waiting for Texture Streaming");
+
     GetGameInstance()->GetGameViewportClient()->bDisableWorldRendering = false;
 
     const float CurrentTime = FPlatformTime::Seconds();
@@ -131,5 +133,30 @@ bool UFrontendLoadingScreenSubsystem::ShouldShowLoadingScreen() const
 
 bool UFrontendLoadingScreenSubsystem::CheckTheNeedToShowLoadingScreen() const
 {
+    if (bIsCurrentlyLoadingMap)
+    {
+        CurrentLoadingReason = TEXT("Loading Level");
+        return true;
+    }
+
+    UWorld* OwningWorld = GetGameInstance()->GetWorld();
+    if (!OwningWorld)
+    {
+        CurrentLoadingReason = TEXT("Initializing World");
+        return true;
+    }
+
+    if (!OwningWorld->HasBegunPlay())
+    {
+        CurrentLoadingReason = TEXT("World hasn't begun play yet");
+        return true;
+    }
+
+    if (!OwningWorld->GetFirstPlayerController())
+    {
+        CurrentLoadingReason = TEXT("Player Controller is not valid yet");
+        return true;
+    }
+    
     return false;
 }
