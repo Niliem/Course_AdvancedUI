@@ -182,6 +182,8 @@ void UFrontendLoadingScreenSubsystem::TryDisplayLoadingScreenIfNone()
     CachedCreatedLoadingScreenWidget = CreatedWidget->TakeWidget();
     
     GetGameInstance()->GetGameViewportClient()->AddViewportWidgetContent(CachedCreatedLoadingScreenWidget.ToSharedRef(), 999);
+    
+    NotifyLoadingScreenVisibilityChanged(true);
 }
 
 void UFrontendLoadingScreenSubsystem::TryRemoveLoadingScreen()
@@ -191,4 +193,20 @@ void UFrontendLoadingScreenSubsystem::TryRemoveLoadingScreen()
 
     GetGameInstance()->GetGameViewportClient()->RemoveViewportWidgetContent(CachedCreatedLoadingScreenWidget.ToSharedRef());
     CachedCreatedLoadingScreenWidget.Reset();
+    
+    NotifyLoadingScreenVisibilityChanged(false);
+}
+
+void UFrontendLoadingScreenSubsystem::NotifyLoadingScreenVisibilityChanged(bool bIsVisible)
+{
+    for (ULocalPlayer* LocalPlayer : GetGameInstance()->GetLocalPlayers())
+    {
+        if (!LocalPlayer)
+            continue;
+
+        if (APlayerController* PlayerController = LocalPlayer->GetPlayerController(GetGameInstance()->GetWorld()))
+        {
+            
+        }
+    }
 }
