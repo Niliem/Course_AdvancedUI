@@ -32,7 +32,7 @@ void UFrontendLoadingScreenSubsystem::Deinitialize()
 
 void UFrontendLoadingScreenSubsystem::Tick(float DeltaTime)
 {
-    Debug::Print(TEXT("UFrontendLoadingScreenSubsystem::Tick"));
+    TryUpdateLoadingScreen();
 }
 
 UWorld* UFrontendLoadingScreenSubsystem::GetTickableGameObjectWorld() const
@@ -63,10 +63,30 @@ TStatId UFrontendLoadingScreenSubsystem::GetStatId() const
 
 void UFrontendLoadingScreenSubsystem::OnMapPreLoaded(const FWorldContext& WorldContext, const FString& MapName)
 {
-    
+    if (WorldContext.OwningGameInstance != GetGameInstance())
+        return;
+
+    SetTickableTickType(ETickableTickType::Conditional);
+
+    bIsCurrentlyLoadingMap = true;
+
+    TryUpdateLoadingScreen();
 }
 
 void UFrontendLoadingScreenSubsystem::OnMapPostLoaded(UWorld* LoadedWorld)
 {
-    
+    if (LoadedWorld && LoadedWorld->GetGameInstance() == GetGameInstance())
+        bIsCurrentlyLoadingMap = false;
+}
+
+void UFrontendLoadingScreenSubsystem::TryUpdateLoadingScreen()
+{
+    if (true)
+    {
+        
+    }
+    else
+    {
+        SetTickableTickType(ETickableTickType::Never);
+    }
 }
