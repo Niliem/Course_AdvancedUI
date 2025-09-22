@@ -10,7 +10,7 @@ public class FrontendUI : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "UMG", "CommonInput", "PropertyPath" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "GameplayTags" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "GameplayTags", "PreLoadScreen" });
 
 		// Uncomment if you are using Slate UI
 		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
