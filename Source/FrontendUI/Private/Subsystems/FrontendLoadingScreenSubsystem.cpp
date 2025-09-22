@@ -30,12 +30,43 @@ void UFrontendLoadingScreenSubsystem::Deinitialize()
     Super::Deinitialize();
 }
 
+void UFrontendLoadingScreenSubsystem::Tick(float DeltaTime)
+{
+    Debug::Print(TEXT("UFrontendLoadingScreenSubsystem::Tick"));
+}
+
+UWorld* UFrontendLoadingScreenSubsystem::GetTickableGameObjectWorld() const
+{
+    if (UGameInstance* OwningGameInstance = GetGameInstance())
+        return OwningGameInstance->GetWorld();
+    
+    return FTickableGameObject::GetTickableGameObjectWorld();
+}
+
+bool UFrontendLoadingScreenSubsystem::IsTickable() const
+{
+    return GetGameInstance() && GetGameInstance()->GetGameViewportClient();
+}
+
+ETickableTickType UFrontendLoadingScreenSubsystem::GetTickableTickType() const
+{
+    if (IsTemplate())
+        return ETickableTickType::Never;
+    
+    return ETickableTickType::Conditional;
+}
+
+TStatId UFrontendLoadingScreenSubsystem::GetStatId() const
+{
+    RETURN_QUICK_DECLARE_CYCLE_STAT(UFrontendLoadingScreenSubsystem, STATGROUP_Tickables);
+}
+
 void UFrontendLoadingScreenSubsystem::OnMapPreLoaded(const FWorldContext& WorldContext, const FString& MapName)
 {
-    Debug::Print(TEXT("On Map Pre Loaded"));
+    
 }
 
 void UFrontendLoadingScreenSubsystem::OnMapPostLoaded(UWorld* LoadedWorld)
 {
-    Debug::Print(TEXT("On Map Post Loaded"));
+    
 }
