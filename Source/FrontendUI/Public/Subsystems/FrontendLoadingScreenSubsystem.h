@@ -41,8 +41,11 @@ private:
     bool IsPreLoadScreenActive() const;
     bool ShouldShowLoadingScreen() const;
     bool CheckTheNeedToShowLoadingScreen() const;
+    
+    void TryDisplayLoadingScreenIfNone();
 
     bool bIsCurrentlyLoadingMap = false;
+    TSharedPtr<SWidget> CachedCreatedLoadingScreenWidget;
     
     mutable float HoldLoadingScreenStartUpTime = -1.0f;
     mutable FString CurrentLoadingReason;
