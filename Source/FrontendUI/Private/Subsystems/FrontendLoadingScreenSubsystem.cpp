@@ -93,6 +93,10 @@ void UFrontendLoadingScreenSubsystem::TryUpdateLoadingScreen()
     }
     else
     {
+        TryRemoveLoadingScreen();
+
+        HoldLoadingScreenStartUpTime = -1.0f;
+        
         SetTickableTickType(ETickableTickType::Never);
     }
 }
@@ -178,4 +182,13 @@ void UFrontendLoadingScreenSubsystem::TryDisplayLoadingScreenIfNone()
     CachedCreatedLoadingScreenWidget = CreatedWidget->TakeWidget();
     
     GetGameInstance()->GetGameViewportClient()->AddViewportWidgetContent(CachedCreatedLoadingScreenWidget.ToSharedRef(), 999);
+}
+
+void UFrontendLoadingScreenSubsystem::TryRemoveLoadingScreen()
+{
+    if (!CachedCreatedLoadingScreenWidget)
+        return;
+
+    GetGameInstance()->GetGameViewportClient()->RemoveViewportWidgetContent(CachedCreatedLoadingScreenWidget.ToSharedRef());
+    CachedCreatedLoadingScreenWidget.Reset();
 }

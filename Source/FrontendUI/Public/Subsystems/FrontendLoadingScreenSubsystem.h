@@ -43,6 +43,7 @@ private:
     bool CheckTheNeedToShowLoadingScreen() const;
     
     void TryDisplayLoadingScreenIfNone();
+    void TryRemoveLoadingScreen();
 
     bool bIsCurrentlyLoadingMap = false;
     TSharedPtr<SWidget> CachedCreatedLoadingScreenWidget;
