@@ -5,6 +5,7 @@
 
 #include "PreLoadScreenManager.h"
 #include "Blueprint/UserWidget.h"
+#include "Interfaces/FrontendLoadingScreenInterface.h"
 #include "Settings/FrontendLoadingScreenSettings.h"
 
 bool UFrontendLoadingScreenSubsystem::ShouldCreateSubsystem(UObject* Outer) const
@@ -206,7 +207,24 @@ void UFrontendLoadingScreenSubsystem::NotifyLoadingScreenVisibilityChanged(bool 
 
         if (APlayerController* PlayerController = LocalPlayer->GetPlayerController(GetGameInstance()->GetWorld()))
         {
-            
+            if (PlayerController->Implements<UFrontendLoadingScreenInterface>())
+            {
+                if (bIsVisible)
+                    IFrontendLoadingScreenInterface::Execute_OnLoadingScreenActivated(PlayerController);
+                else
+                    IFrontendLoadingScreenInterface::Execute_OnLoadingScreenDeactivated(PlayerController);
+            }
+
+            if (APawn* Pawn = PlayerController->GetPawn())
+            {
+                if (Pawn->Implements<UFrontendLoadingScreenInterface>())
+                {
+                    if (bIsVisible)
+                        IFrontendLoadingScreenInterface::Execute_OnLoadingScreenActivated(Pawn);
+                    else
+                        IFrontendLoadingScreenInterface::Execute_OnLoadingScreenDeactivated(Pawn);
+                }
+            }
         }
     }
 }
