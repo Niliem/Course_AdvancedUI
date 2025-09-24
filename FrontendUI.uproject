@@ -24,6 +24,14 @@
 		{
 			"Name": "CommonUI",
 			"Enabled": true
+		},
+		{
+			"Name": "GameSubtitles",
+			"Enabled": true
+		},
+		{
+			"Name": "UIExtension",
+			"Enabled": true
 		}
 	]
 }
